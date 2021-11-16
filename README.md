@@ -64,13 +64,13 @@ Após realizar a configuração do Cliente, acesse no Painel Administrativo do M
 No primeiro bloco de informação, está a configuração para habilitar ou desabilitar o módulo por completo, marque `Sim` para continuar a configuração. Em seguida possuimos os seguites campos:
 
 - Api Key
- - Chave da Api fornecida pelo PagHiper.
+    - Chave da Api fornecida pelo PagHiper.
 
 - Token
-  - Token Fornecido pelo PagHiper.
+    - Token Fornecido pelo PagHiper.
 
 - Dias de Validade
-  - Essa opção é utilizada tanto para boleto como para o pix. É utilizado um valor inteiro em dias para dizer a validade do boleto.
+    - Essa opção é utilizada tanto para boleto como para o pix. É utilizado um valor inteiro em dias para dizer a validade do boleto.
 
   ![FOTO 3](.github/img/03.png)
 
@@ -81,10 +81,10 @@ OBS: Para que todas as configurações a seguir funcionem, todo o passo a passo 
 ### Configurações de Boleto
 
 - Habilitado
- - Habilita ou desabilita a forma de pagamento por boleto.
+    - Habilita ou desabilita a forma de pagamento por boleto.
 
 - Percentual de Multa
- - Adiciona um valor ao percentual de multa por atraso.
+    - Adiciona um valor ao percentual de multa por atraso.
 
 - Juros por Atraso
     - Define se é aplicado ou não juros por atraso, valor.
@@ -103,6 +103,6 @@ OBS: Para que todas as configurações a seguir funcionem, todo o passo a passo 
 ### Configurações do Pix
 
 - Habilitado
- - Habilita ou desabilita o método de pagamento com Pix.
+    - Habilita ou desabilita o método de pagamento com Pix.
 
 ![FOTO 5](.github/img/05.png)
