@@ -14,6 +14,7 @@
 ### Pré requisito:
 
 - Requer que o PHP esteja no mínimo na versão 7.0.X.
+- O endereço do cliente deve ser composto por no mínimo 3 linhas
 
 ### Instalação do Módulo de Integração do PagHiper:
 
