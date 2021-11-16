@@ -9,6 +9,7 @@
 - [x] 2.3.X
 - [x] 2.4.0
 - [x] 2.4.1
+- [x] 2.4.2 
  
 ### Pré requisito:
 
@@ -38,7 +39,7 @@
   1. Baixe o repositório em um arquivo .zip;
   2. Dentro do diretório de instalação da loja, crie a estrutura de pastas ```app/code/Paghiper/Magento2```
   3. Extraia o conteúdo do arquivo zip dentro dessa pasta.
-  4. Habilite o módulo com o seguinte comando, ```bin/magento module:enable Paghiper_Magento2```
+  4. Habilite o módulo com o seguinte comando, ```bin/magento module:enable Paghiper_Magento2 --clear-static-content```
   5. Execute o comando ```bin/magento setup:upgrade```
   6. Execute o comando ```bin/magento setup:di:compile```
   7. Execute o comando ```bin/magento setup:static-content:deploy -f```
