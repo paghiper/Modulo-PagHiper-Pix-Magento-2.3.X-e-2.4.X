@@ -1,0 +1,24 @@
+<?php
+$paymentInfo = $block->getPaymentInfo();
+if ($block->getPaymentMethod() === 'paghiper_boleto') : ?>
+  <button class="action primary btn-paghiper-boleto" type="button" id="paghiper" onclick="window.open('<?php echo $paymentInfo['url'] ?>');">
+  <span data-bind="i18n: '<?= $paymentInfo['texto'] ?>'"></span>
+</button>
+<?php
+elseif ($block->getPaymentMethod() === 'paghiper_pix') : ?>
+  <button type="button" class="action primary btn-paghiper-pix" data-trigger="trigger">
+    <span data-bind="i18n: '<?= $paymentInfo['texto'] ?>'"></span>
+  </button>
+  <div data-bind="mageInit: {
+        'Magento_Ui/js/modal/modal':{
+            'type': 'popup',
+            'modalClass': 'modalpix',
+            'title': 'Escaneie o QRcode',
+            'trigger': '[data-trigger=trigger]',
+            'responsive': true,
+        }}">
+    <div class="content">
+      <img src="<?php echo $paymentInfo['url'] ?>" alt="Erro ao carregar seu QRCode">
+    </div>
+  </div>
+<?php endif; ?>

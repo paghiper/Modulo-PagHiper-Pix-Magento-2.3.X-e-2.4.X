@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+  <default>
+    <payment>
+      <paghiper_boleto>
+        <active>1</active>
+        <payment_action>order</payment_action>
+        <title>PagHiper - Boleto</title>
+        <model>Paghiper\Magento2\Model\Method\Boleto</model>
+        <ativar_boleto>0</ativar_boleto>
+        <percentual_multa>0.00</percentual_multa>
+        <dias_pagamento_antecipado>0</dias_pagamento_antecipado>
+        <valor_desconto_antecipado>0.00</valor_desconto_antecipado>
+        <numero_apos_vencimento>0</numero_apos_vencimento>
+        <order_status>pending</order_status>
+        <sort_order>1</sort_order>
+      </paghiper_boleto>
+      <paghiper_pix>
+        <active>1</active>
+        <payment_action>order</payment_action>
+        <title>PagHiper - Pix</title>
+        <model>Paghiper\Magento2\Model\Method\Pix</model>
+        <ativar_pix>0</ativar_pix>
+        <order_status>pending</order_status>
+        <sort_order>2</sort_order>
+      </paghiper_pix>
+    </payment>
+  </default>
+</config>

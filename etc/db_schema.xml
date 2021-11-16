@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+  <table name="sales_order" resource="sales" engine="innodb" comment="Sales Invoice">
+    <column xsi:type="decimal" name="base_paghiper_fee_amount" scale="4" precision="20" unsigned="false"
+            nullable="true" comment="Base Fee"/>
+    <column xsi:type="decimal" name="paghiper_fee_amount" scale="4" precision="20" unsigned="false"
+            nullable="true" comment="Fee"/>
+  </table>
+    <table name="sales_invoice" resource="sales" engine="innodb" comment="Sales Invoice">
+        <column xsi:type="decimal" name="base_paghiper_fee_amount" scale="4" precision="20" unsigned="false"
+                nullable="true" comment="Base Fee"/>
+        <column xsi:type="decimal" name="paghiper_fee_amount" scale="4" precision="20" unsigned="false"
+                nullable="true" comment="Fee"/>
+    </table>
+</schema>
