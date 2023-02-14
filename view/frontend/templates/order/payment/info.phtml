@@ -1,9 +1,9 @@
 <?php
 $paymentInfo = $block->getPaymentInfo();
-if ($block->getPaymentMethod() === 'paghiper_boleto') : ?>
+if ($block->getPaymentMethod() === 'paghiper_boleto'): ?>
 
   <button type="button" class="action primary btn-paghiper-pix" data-trigger="trigger">
-    <span data-bind="i18n: '<?= $paymentInfo['texto'] ?>'"></span>
+    <span data-bind="i18n: '<?= /* @noEscape */ $paymentInfo['texto'] ?>'"></span>
   </button>
   <div data-bind="mageInit: {
         'Magento_Ui/js/modal/modal':{
@@ -14,10 +14,16 @@ if ($block->getPaymentMethod() === 'paghiper_boleto') : ?>
             'responsive': true,
         }}">
     <div class="content">
-      <input class="action primary btn-paghiper-boleto" type="button" id="paghiper" onclick="window.open('<?php echo $paymentInfo['url'] ?>');" value="Baixe seu boleto aqui" />
+      <input class="action primary btn-paghiper-boleto" 
+             type="button" 
+             id="paghiper" 
+             onclick="window.open('<?= /* @noEscape */ $paymentInfo['url'] ?>');" 
+             value="Baixe seu boleto aqui" />
     </div>
     <h3>Linha digitável:</h3>
-    <textarea readonly rows="1" name="pixer" id="select-this"><?= $paymentInfo['linha-digitavel'] ?></textarea>
+    <textarea readonly rows="1" name="pixer" id="select-this">
+      <?= /* @noEscape */ $paymentInfo['linha-digitavel'] ?>
+    </textarea>
     <div class="actions-toolbar">
       <div class="primary">
         <button id='clickMe'>Copiar</button>
@@ -25,10 +31,10 @@ if ($block->getPaymentMethod() === 'paghiper_boleto') : ?>
     </div>
   </div>
 
-<?php
-elseif ($block->getPaymentMethod() === 'paghiper_pix') : ?>
+    <?php
+elseif ($block->getPaymentMethod() === 'paghiper_pix'): ?>
   <button type="button" class="action primary btn-paghiper-pix" data-trigger="trigger">
-    <span data-bind="i18n: '<?= $paymentInfo['texto'] ?>'"></span>
+    <span data-bind="i18n: '<?= /* @noEscape */ $paymentInfo['texto'] ?>'"></span>
   </button>
   <div data-bind="mageInit: {
         'Magento_Ui/js/modal/modal':{
@@ -39,10 +45,10 @@ elseif ($block->getPaymentMethod() === 'paghiper_pix') : ?>
             'responsive': true,
         }}">
     <div class="content">
-      <img src="<?php echo $paymentInfo['url'] ?>" alt="Erro ao carregar seu QRCode">
+      <img src="<?= /* @noEscape */ $paymentInfo['url'] ?>" alt="Erro ao carregar seu QRCode">
     </div>
     <h3>Linha digitável:</h3>
-    <textarea readonly rows="5" name="pixer" id="select-this"><?= $paymentInfo['chavepix'] ?></textarea>
+    <textarea readonly rows="5" name="pixer" id="select-this"><?= /* @noEscape */ $paymentInfo['chavepix'] ?></textarea>
     <div class="actions-toolbar">
       <div class="primary">
         <button id='clickMe'>Copiar</button>
