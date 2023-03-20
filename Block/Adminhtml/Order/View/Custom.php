@@ -13,11 +13,6 @@ class Custom extends \Magento\Backend\Block\Template
         parent::__construct($context, $data);
     }
 
-    public function _prepareLayout()
-    {
-        return parent::_prepareLayout();
-    }
-
     public function getPaymentMethod()
     {
         $order_id = $this->getRequest()->getParam('order_id');

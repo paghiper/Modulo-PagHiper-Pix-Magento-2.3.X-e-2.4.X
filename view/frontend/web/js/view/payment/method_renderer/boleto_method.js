@@ -103,7 +103,7 @@ define(
                         return false;
                     }
 
-                    // Valida DVs
+                  // Valida DVs
                     var tamanho = cnpj.length - 2
                     var numeros = cnpj.substring(0, tamanho);
                     var digitos = cnpj.substring(tamanho);

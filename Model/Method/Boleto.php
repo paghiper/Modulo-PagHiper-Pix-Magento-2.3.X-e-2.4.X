@@ -2,6 +2,8 @@
 
 namespace Paghiper\Magento2\Model\Method;
 
+use Exception as ExceptionSituation;
+use Magento\Framework\Exception\LocalizedException;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -33,6 +35,11 @@ class Boleto extends \Magento\Payment\Model\Method\AbstractMethod
      */
     protected $_loggerInterface;
 
+    /**
+     * @var CurlFactory
+     */
+    private $_curlFactory;
+
     public function __construct(
         \Magento\Framework\Model\Context $context,
         \Magento\Framework\Registry $registry,
@@ -44,6 +51,7 @@ class Boleto extends \Magento\Payment\Model\Method\AbstractMethod
         \Paghiper\Magento2\Helper\Data $helper,
         \Magento\Store\Model\StoreManagerInterface $storeManager,
         LoggerInterface $loggerInterface,
+        \Magento\Framework\HTTP\Adapter\CurlFactory $_curlFactory,
         \Magento\Framework\Model\ResourceModel\AbstractResource $resource = null,
         \Magento\Framework\Data\Collection\AbstractDb $resourceCollection = null,
         array $data = []
@@ -63,6 +71,7 @@ class Boleto extends \Magento\Payment\Model\Method\AbstractMethod
         $this->helperData = $helper;
         $this->_storeManager = $storeManager;
         $this->_loggerInterface = $loggerInterface;
+        $this->_curlFactory = $_curlFactory;
     }
 
     /**
@@ -79,6 +88,9 @@ class Boleto extends \Magento\Payment\Model\Method\AbstractMethod
         return true;
     }
 
+    /**
+     * @throws LocalizedException
+     */
     public function order(\Magento\Payment\Model\InfoInterface $payment, $amount)
     {
         try {
@@ -105,7 +117,7 @@ class Boleto extends \Magento\Payment\Model\Method\AbstractMethod
             $dataUser['payer_phone'] = $billingaddress->getTelephone();
 
             if (!isset($billingaddress->getStreet()[2])) {
-                throw new \Exception("Por favor, preencha seu endereço corretamente.", 1);
+                throw new ExceptionSituation(__("Por favor, preencha seu endereço corretamente."), 1);
             }
 
             if (isset($billingaddress->getStreet()[3])) {
@@ -121,7 +133,8 @@ class Boleto extends \Magento\Payment\Model\Method\AbstractMethod
             $dataUser['payer_city'] = $billingaddress->getCity();
             $dataUser['payer_state'] = $stateBillingAddress;
             $dataUser['payer_zip_code'] = str_replace("-", "", $billingaddress->getPostcode());
-            $dataUser['notification_url'] = $this->_storeManager->getStore()->getBaseUrl() . 'paghiper/notification/updatestatus';
+            $dataUser['notification_url'] =
+              $this->_storeManager->getStore()->getBaseUrl() . 'paghiper/notification/updatestatus';
 
             $discount = str_replace("-", "", $order->getDiscountAmount()) * 100;
             if ($discount > 0) {
@@ -170,7 +183,7 @@ class Boleto extends \Magento\Payment\Model\Method\AbstractMethod
             $this->_loggerInterface->notice(json_encode($response));
 
             if ($response['create_request']->result == 'reject') {
-                throw new \Exception($response['create_request']->response_message, 1);
+                throw new ExceptionSituation($response['create_request']->response_message, 1);
             }
             $transactionToken = $response['create_request']->transaction_id;
             $boletoUrl = $response['create_request']->bank_slip->url_slip_pdf;
@@ -180,35 +193,42 @@ class Boleto extends \Magento\Payment\Model\Method\AbstractMethod
             $order->setPaghiperBoleto($boletoUrl);
             $order->setPaghiperBoletoDigitavel($linha_digitavel);
 
-        } catch (\Exception $e) {
+            $order->setState(\Magento\Sales\Model\Order::STATE_PENDING_PAYMENT);
+            $order->setStatus(\Magento\Sales\Model\Order::STATE_PENDING_PAYMENT);
+
+        } catch (ExceptionSituation $e) {
             throw new \Magento\Framework\Exception\LocalizedException(__($e->getMessage()));
         }
         return $this;
     }
-
+    
     public function doPayment($data)
     {
-        $curl = curl_init();
-
-        curl_setopt_array($curl, [
-        CURLOPT_URL => 'https://api.paghiper.com/transaction/create/',
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_ENCODING => "",
-        CURLOPT_MAXREDIRS => 10,
-        CURLOPT_TIMEOUT => 0,
-        CURLOPT_FOLLOWLOCATION => true,
-        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-        CURLOPT_CUSTOMREQUEST => "POST",
-        CURLOPT_POSTFIELDS => json_encode($data),
-        CURLOPT_HTTPHEADER => [
-        "Content-Type: application/json"
-        ],
+        $url = 'https://api.paghiper.com/transaction/create/';
+        $curlHeaders = [
+          "Content-Type: application/json",
+          "Accept: application/json"
+        ];
+        $curlBody = json_encode($data);
+    
+        /** @var \Magento\Framework\HTTP\Adapter\Curl $curlObject */
+        $curlObject = $this->_curlFactory->create();
+        $curlObject->setConfig([
+          CURLOPT_RETURNTRANSFER => true,
+          CURLOPT_ENCODING => "",
+          CURLOPT_MAXREDIRS => 10,
+          CURLOPT_TIMEOUT => 0,
+          CURLOPT_FOLLOWLOCATION => true,
         ]);
-
-        $response = curl_exec($curl);
-
-        curl_close($curl);
-
+    
+        $curlObject->connect($url);
+        $curlObject->write(\Zend_Http_Client::POST, $url, '1.1', $curlHeaders, $curlBody);
+        $response = $curlObject->read();
+        $curlObject->close();
+    
+        $response = preg_split('/^\r?$/m', $response, 2);
+        $response = trim($response[1]);
+    
         return json_decode($response);
     }
 

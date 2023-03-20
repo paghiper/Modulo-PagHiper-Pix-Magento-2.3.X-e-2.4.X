@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Mathias Matas Hennig <mathias@tezus.com.br>
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+  <preference for="\Magento\Sales\Model\Order\Payment\Operations\OrderOperation" 
+    type="\Paghiper\Magento2\Model\Order\Payment\Operations\OrderOperation"/>
+</config>

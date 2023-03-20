@@ -12,7 +12,7 @@ class UpgradeSchema implements UpgradeSchemaInterface
     {
         $setup->startSetup();
         $orderTable = 'sales_order';
-        //Order table
+      //Order table
         $setup->getConnection()
         ->addColumn(
             $setup->getTable($orderTable),

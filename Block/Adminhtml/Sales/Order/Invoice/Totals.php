@@ -8,22 +8,22 @@ use Magento\Sales\Model\Order\Invoice;
 
 class Totals extends Template
 {
-    /**
-     * Order invoice
-     * @var Invoice
-     */
+  /**
+   * Order invoice
+   * @var Invoice
+   */
     protected $_invoice;
 
-    /**
-     * @var DataObject
-     */
+  /**
+   * @var DataObject
+   */
     protected $_source;
 
-    /**
-     * Get data (totals) source model
-     *
-     * @return DataObject
-     */
+  /**
+   * Get data (totals) source model
+   *
+   * @return DataObject
+   */
     public function getSource(): DataObject
     {
         return $this->getParentBlock()->getSource();
@@ -34,11 +34,11 @@ class Totals extends Template
         return $this->getParentBlock()->getInvoice();
     }
     
-    /**
-     * Initialize payment fee totals
-     *
-     * @return $this
-     */
+  /**
+   * Initialize payment fee totals
+   *
+   * @return $this
+   */
     public function initTotals(): Totals
     {
         $this->getParentBlock();

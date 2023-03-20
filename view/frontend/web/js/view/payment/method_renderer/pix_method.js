@@ -36,7 +36,7 @@ define(
                     if (cpf == '') {
                         return false;
                     }
-                    // Elimina CPFs invalidos conhecidos
+                  // Elimina CPFs invalidos conhecidos
                     if (cpf.length != 11 ||
                     cpf == "00000000000" ||
                     cpf == "11111111111" ||
@@ -62,7 +62,7 @@ define(
                     if (rev != parseInt(cpf.charAt(9))) {
                         return false;
                     }
-                    // Valida 2o digito
+                  // Valida 2o digito
                     add = 0;
                     for (i = 0; i < 10; i++) {
                         add += parseInt(cpf.charAt(i)) * (11 - i);
@@ -89,7 +89,7 @@ define(
                         return false;
                     }
 
-                    // Elimina CNPJs invalidos conhecidos
+                  // Elimina CNPJs invalidos conhecidos
                     if (cnpj == "00000000000000" ||
                     cnpj == "11111111111111" ||
                     cnpj == "22222222222222" ||
@@ -103,7 +103,7 @@ define(
                         return false;
                     }
 
-                    // Valida DVs
+                  // Valida DVs
                     var tamanho = cnpj.length - 2
                     var numeros = cnpj.substring(0, tamanho);
                     var digitos = cnpj.substring(tamanho);

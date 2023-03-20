@@ -2,6 +2,7 @@
 
 namespace Paghiper\Magento2\Model\Method;
 
+use Exception as ExceptionSituation;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -32,6 +33,11 @@ class Pix extends \Magento\Payment\Model\Method\AbstractMethod
      * @var LoggerInterface
      */
     protected $_loggerInterface;
+    
+     /**
+      * @var CurlFactory
+      */
+    private $_curlFactory;
 
     public function __construct(
         \Magento\Framework\Model\Context $context,
@@ -44,6 +50,7 @@ class Pix extends \Magento\Payment\Model\Method\AbstractMethod
         \Paghiper\Magento2\Helper\Data $helper,
         \Magento\Store\Model\StoreManagerInterface $storeManager,
         LoggerInterface $loggerInterface,
+        \Magento\Framework\HTTP\Adapter\CurlFactory $_curlFactory,
         \Magento\Framework\Model\ResourceModel\AbstractResource $resource = null,
         \Magento\Framework\Data\Collection\AbstractDb $resourceCollection = null,
         array $data = []
@@ -63,6 +70,7 @@ class Pix extends \Magento\Payment\Model\Method\AbstractMethod
         $this->helperData = $helper;
         $this->_storeManager = $storeManager;
         $this->_loggerInterface = $loggerInterface;
+        $this->_curlFactory = $_curlFactory;
     }
 
     /**
@@ -82,15 +90,15 @@ class Pix extends \Magento\Payment\Model\Method\AbstractMethod
     public function order(\Magento\Payment\Model\InfoInterface $payment, $amount)
     {
         try {
-          //Pegando informações adicionais do pagamento (CPF)
+            //Pegando informações adicionais do pagamento (CPF)
             $info = $this->getInfoInstance();
             $paymentInfo = $info->getAdditionalInformation();
 
-          //Helper
+            //Helper
             $url = $this->helperData->getUrl();
             $days = $this->helperData->getDays();
 
-          //pegando dados do pedido do clioente
+            //pegando dados do pedido do cliente
             $order = $payment->getOrder();
             $billingaddress = $order->getBillingAddress();
 
@@ -111,11 +119,12 @@ class Pix extends \Magento\Payment\Model\Method\AbstractMethod
             $dataUser['shipping_price_cents'] = $order->getShippingAmount() * 100;
             $dataUser['shipping_methods'] = $order->getShippingDescription();
             $dataUser['fixed_description'] = true;
-            $dataUser['notification_url'] = $this->_storeManager->getStore()->getBaseUrl() . 'paghiper/notification/updatestatus';
+            $dataUser['notification_url'] =
+              $this->_storeManager->getStore()->getBaseUrl() . 'paghiper/notification/updatestatus';
 
             $items = $order->getAllItems();
             $i = 0;
-          /** @var \Magento\Catalog\Model\Product */
+            /** @var \Magento\Catalog\Model\Product */
             foreach ($items as $key => $item) {
                 if ($item->getProductType() != 'configurable' && $item->getProductType() != 'bundle') {
                     if ($item->getPrice() == 0) {
@@ -144,7 +153,7 @@ class Pix extends \Magento\Payment\Model\Method\AbstractMethod
             $this->_loggerInterface->notice(json_encode($response));
 
             if ($response['pix_create_request']->result == 'reject') {
-                throw new \Exception($response['pix_create_request']->response_message, 1);
+                throw new ExceptionSituation($response['pix_create_request']->response_message, 1);
             }
 
             $pixcode = $response['pix_create_request']->pix_code->qrcode_image_url;
@@ -154,8 +163,11 @@ class Pix extends \Magento\Payment\Model\Method\AbstractMethod
             $order->setPaghiperTransaction($transactionToken);
             $order->setPaghiperPix($pixcode);
             $order->setPaghiperChavepix($emv);
+            
+            $order->setState(\Magento\Sales\Model\Order::STATE_PENDING_PAYMENT);
+            $order->setStatus(\Magento\Sales\Model\Order::STATE_PENDING_PAYMENT);
 
-        } catch (\Exception $e) {
+        } catch (ExceptionSituation $e) {
             throw new \Magento\Framework\Exception\LocalizedException(__($e->getMessage()));
         }
         return $this;
@@ -163,26 +175,30 @@ class Pix extends \Magento\Payment\Model\Method\AbstractMethod
 
     public function doPayment($data)
     {
-        $curl = curl_init();
-
-        curl_setopt_array($curl, [
-        CURLOPT_URL => 'https://pix.paghiper.com/invoice/create/',
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_ENCODING => "",
-        CURLOPT_MAXREDIRS => 10,
-        CURLOPT_TIMEOUT => 0,
-        CURLOPT_FOLLOWLOCATION => true,
-        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-        CURLOPT_CUSTOMREQUEST => "POST",
-        CURLOPT_POSTFIELDS => json_encode($data),
-        CURLOPT_HTTPHEADER => [
-        "Content-Type: application/json"
-        ],
+        $url = 'https://pix.paghiper.com/invoice/create/';
+        $curlHeaders = [
+          "Content-Type: application/json",
+          "Accept: application/json"
+        ];
+        $curlBody = json_encode($data);
+        
+        /** @var \Magento\Framework\HTTP\Adapter\Curl $curlObject */
+        $curlObject = $this->_curlFactory->create();
+        $curlObject->setConfig([
+          CURLOPT_RETURNTRANSFER => true,
+          CURLOPT_ENCODING => "",
+          CURLOPT_MAXREDIRS => 10,
+          CURLOPT_TIMEOUT => 0,
+          CURLOPT_FOLLOWLOCATION => true,
         ]);
-
-        $response = curl_exec($curl);
-
-        curl_close($curl);
+        
+        $curlObject->connect($url);
+        $curlObject->write(\Zend_Http_Client::POST, $url, '1.1', $curlHeaders, $curlBody);
+        $response = $curlObject->read();
+        $curlObject->close();
+        
+        $response = preg_split('/^\r?$/m', $response, 2);
+        $response = trim($response[1]);
 
         return json_decode($response);
     }

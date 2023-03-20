@@ -7,9 +7,9 @@ use \Magento\Framework\Encryption\EncryptorInterface as encryptor;
 
 class Data extends AbstractHelper
 {
-    /**
-     * returning config value
-     **/
+  /**
+   * returning config value
+   **/
     public function __construct(
         \Magento\Store\Model\StoreManagerInterface $storeManager,
         \Magento\Checkout\Model\Session $checkoutSession,
@@ -58,6 +58,11 @@ class Data extends AbstractHelper
     public function getDays()
     {
         return $this->getConfig('payment/paghiper/validade');
+    }
+
+    public function getInvoiceAfterConfirmation()
+    {
+        return $this->getConfig('payment/paghiper/invoice_auto');
     }
 
     private function getModuleEnabled()
