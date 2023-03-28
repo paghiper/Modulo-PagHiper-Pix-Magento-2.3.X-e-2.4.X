@@ -1,4 +1,4 @@
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../Config/etc/system_file.xsd">
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
   <system>
     <section id="payment">
       <group id="paghiper" translate="label" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -32,6 +32,13 @@
             <field id="enabled">1</field>
           </depends>
         </field>
+        <field id="invoice_auto" translate="label" type="select" sortOrder="6" showInDefault="1" showInWebsite="1" showInStore="0">
+          <label>Faturar Após Pagamento Confirmado?</label>
+          <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+          <depends>
+            <field id="enabled">1</field>
+          </depends>
+        </field>        
       </group>
       <group id="paghiper_boleto" translate="label" sortOrder="101" showInDefault="1" showInWebsite="1" showInStore="1">
         <label>PagHiper - Configurações de Boleto</label>
