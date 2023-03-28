@@ -110,6 +110,7 @@ class Boleto extends \Magento\Payment\Model\Method\AbstractMethod
             $stateBillingAddress = $this->helperData->checkStates($order->getBillingAddress()->getRegion());
 
             $dataUser['apiKey'] = $this->helperData->getAcessToken();
+            $dataUser['partners_id'] = 'KAPK109D';
             $dataUser['order_id'] = $order->getIncrementId();
             $dataUser['payer_email'] = $billingaddress->getEmail();
             $dataUser['payer_name'] = $billingaddress->getFirstName() . ' ' . $billingaddress->getLastName();
