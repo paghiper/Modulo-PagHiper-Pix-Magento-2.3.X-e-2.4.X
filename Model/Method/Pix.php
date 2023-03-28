@@ -103,6 +103,7 @@ class Pix extends \Magento\Payment\Model\Method\AbstractMethod
             $billingaddress = $order->getBillingAddress();
 
             $dataUser['apiKey'] = $this->helperData->getAcessToken();
+            $dataUser['partners_id'] = 'POP52A2Z';
             $dataUser['order_id'] = $order->getIncrementId();
             $dataUser['payer_email'] = $billingaddress->getEmail();
             $dataUser['payer_name'] = $billingaddress->getFirstName() . ' ' . $billingaddress->getLastName();
