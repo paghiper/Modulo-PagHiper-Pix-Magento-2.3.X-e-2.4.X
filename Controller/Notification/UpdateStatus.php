@@ -142,7 +142,7 @@ class UpdateStatus extends Action implements CsrfAwareActionInterface
                         
                         $event = $base->status;
                         
-                        if ($event == static::STATUS_PAID || $event == static::STATUS_RESERVED) {
+                        if ($event == static::STATUS_PAID) {
                             $totalPaid = $base->value_cents_paid / 100;
                             $paghiperTax = $totalPaid - $order->getGrandTotal();
                             $order->setBasePaghiperFeeAmount($paghiperTax);
