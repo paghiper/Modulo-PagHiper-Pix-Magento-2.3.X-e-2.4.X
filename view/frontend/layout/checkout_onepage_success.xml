@@ -5,8 +5,13 @@
     <css src="Paghiper_Magento2::css/style.css"/>
   </head>
   <body>
-    <referenceContainer name="page.main.title">
-      <block class="Paghiper\Magento2\Block\Checkout\Success" name="paghiper.info.payment" template="Paghiper_Magento2::checkout/success.phtml" after="-" />
-    </referenceContainer>
+
+     <referenceContainer name="order.success.additional.info">
+            <block class="Paghiper\Magento2\Block\Checkout\Success"
+                   name="paghiper_success"
+                   template="Paghiper_Magento2::checkout/success.phtml"
+                   after="-">
+            </block>
+        </referenceContainer>
   </body>
 </page>
