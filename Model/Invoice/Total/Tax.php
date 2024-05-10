@@ -8,6 +8,8 @@ use Magento\Sales\Model\Order\Invoice\Total\AbstractTotal;
 class Tax extends AbstractTotal
 {
     /**
+     * Collect
+     *
      * @param Invoice $invoice
      * @return $this
      */

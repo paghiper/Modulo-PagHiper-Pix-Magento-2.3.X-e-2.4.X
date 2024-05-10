@@ -16,19 +16,20 @@ use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\App\CsrfAwareActionInterface;
 use Magento\Framework\App\Request\InvalidRequestException;
 use Paghiper\Magento2\Model\CreateInvoice;
+use Magento\Framework\HTTP\Client\Curl;
 
 class UpdateStatus extends Action implements CsrfAwareActionInterface
 {
-    const STATUS_SUCCESS = 'success';
-    const STATUS_PENDING = 'pending';
-    const STATUS_PAID = 'paid';
-    const STATUS_RESERVED = 'reserved';
-    const STATUS_REFUNDED = 'refunded';
-    const STATUS_CANCELED = 'canceled';
-    const URL_BOLETO = "https://api.paghiper.com/transaction/notification/";
-    const URL_PIX = "https://pix.paghiper.com/invoice/notification/";
-    const PAGHIPER_PIX = 'paghiper_pix';
-    const PAGHIPER_BOLETO = 'paghiper_boleto';
+    protected const STATUS_SUCCESS = 'success';
+    protected const STATUS_PENDING = 'pending';
+    protected const STATUS_PAID = 'paid';
+    protected const STATUS_RESERVED = 'reserved';
+    protected const STATUS_REFUNDED = 'refunded';
+    protected const STATUS_CANCELED = 'canceled';
+    protected const URL_BOLETO = "https://api.paghiper.com/transaction/notification/";
+    protected const URL_PIX = "https://pix.paghiper.com/invoice/notification/";
+    protected const PAGHIPER_PIX = 'paghiper_pix';
+    protected const PAGHIPER_BOLETO = 'paghiper_boleto';
 
     /**
      * @var Data
@@ -55,7 +56,28 @@ class UpdateStatus extends Action implements CsrfAwareActionInterface
      */
     protected $createInvoice;
 
+    /**
+     * @var SearchCriteriaBuilder
+     */
+    protected $searchCriteriaBuilder;
+
+    /**
+     * @var Curl
+     */
+    protected $curl;
+
+    /**
+     * @param Curl $curl
+     * @param Context $context
+     * @param OrderRepositoryInterface $orderRepository
+     * @param Data $helper
+     * @param SearchCriteriaBuilder $searchCriteriaBuilder
+     * @param LoggerInterface $logger
+     * @param CurlFactory $_curlFactory
+     * @param CreateInvoice $createInvoice
+     */
     public function __construct(
+        Curl $curl,
         Context $context,
         OrderRepositoryInterface $orderRepository,
         Data $helper,
@@ -64,6 +86,7 @@ class UpdateStatus extends Action implements CsrfAwareActionInterface
         CurlFactory $_curlFactory,
         CreateInvoice $createInvoice
     ) {
+        $this->curl = $curl;
         $this->orderRepository = $orderRepository;
         $this->helperData = $helper;
         $this->searchCriteriaBuilder = $searchCriteriaBuilder;
@@ -73,20 +96,20 @@ class UpdateStatus extends Action implements CsrfAwareActionInterface
         return parent::__construct($context);
     }
 
-  /**
-   * Execute action based on request and return result
-   *
-   * @return bool|ResponseInterface|\Magento\Framework\Controller\ResultInterface
-   * @throws ExceptionWebapi
-   */
+    /**
+     * Execute action based on request and return result
+     *
+     * @return bool|ResponseInterface|\Magento\Framework\Controller\ResultInterface
+     * @throws ExceptionWebapi
+     */
     public function execute()
     {
         try {
             $params = $this->getRequest()->getParams();
-            if ($params['apiKey'] &&
-              $params['transaction_id'] &&
-              $params['notification_id'] &&
-              $params['notification_date']
+            if (isset($params['apiKey']) &&
+                isset($params['transaction_id']) &&
+                isset($params['notification_id']) &&
+                isset($params['notification_date'])
             ) {
                 $searchCriteria = $this->searchCriteriaBuilder
                 ->addFilter(
@@ -109,31 +132,13 @@ class UpdateStatus extends Action implements CsrfAwareActionInterface
                     ];
                     
                     $url = $paymentMethod == static::PAGHIPER_BOLETO ? static::URL_BOLETO : static::URL_PIX;
-                    $curlHeaders = [
-                      "Content-Type: application/json",
-                      "Accept: application/json"
-                    ];
+                    $headers = ["Content-Type" => "application/json", "Accept" => "application/json"];
                     $curlBody = json_encode($request);
-  
-                    /** @var \Magento\Framework\HTTP\Adapter\Curl $curlObject */
-                    $curlObject = $this->_curlFactory->create();
-                    $curlObject->setConfig([
-                      CURLOPT_RETURNTRANSFER => true,
-                      CURLOPT_ENCODING => "",
-                      CURLOPT_MAXREDIRS => 10,
-                      CURLOPT_TIMEOUT => 0,
-                      CURLOPT_FOLLOWLOCATION => true,
-                    ]);
-  
-                      $curlObject->connect($url);
-                      $curlObject->write(\Zend_Http_Client::POST, $url, '1.1', $curlHeaders, $curlBody);
-                      $response = $curlObject->read();
-                      $curlObject->close();
-  
-                      $response = preg_split('/^\r?$/m', $response, 2);
-                      $response = trim($response[1]);
-
-                      $base = json_decode($response)->status_request;
+                    $this->curl->setHeaders($headers);
+                    $this->curl->post($url, $curlBody);
+                    $response = $this->curl->getBody();
+                    
+                    $base = json_decode($response)->status_request;
                       
                     if ($base->result === static::STATUS_SUCCESS) {
                         if (!$order->getId()) {
@@ -170,11 +175,23 @@ class UpdateStatus extends Action implements CsrfAwareActionInterface
         }
     }
 
+    /**
+     * Create csrf validation exception
+     *
+     * @param RequestInterface $request
+     * @return InvalidRequestException|null
+     */
     public function createCsrfValidationException(RequestInterface $request): ?InvalidRequestException
     {
         return null;
     }
 
+    /**
+     * Validate for csrf
+     *
+     * @param RequestInterface $request
+     * @return bool|null
+     */
     public function validateForCsrf(RequestInterface $request): ?bool
     {
         return true;

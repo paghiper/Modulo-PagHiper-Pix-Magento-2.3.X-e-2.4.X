@@ -39,6 +39,13 @@ class CreateInvoice
      */
     protected $data;
 
+    /**
+     * @param OrderRepositoryInterface $orderRepository
+     * @param InvoiceService $invoiceService
+     * @param InvoiceSender $invoiceSender
+     * @param Transaction $transaction
+     * @param Data $data
+     */
     public function __construct(
         OrderRepositoryInterface $orderRepository,
         InvoiceService           $invoiceService,
@@ -53,10 +60,13 @@ class CreateInvoice
         $this->data =            $data;
     }
 
-  /**
-   * @throws LocalizedException
-   * @throws \Exception
-   */
+    /**
+     * Execute
+     *
+     * @param mixed $order
+     * @throws LocalizedException
+     * @throws \Exception
+     */
     public function execute($order)
     {
         if ((int) $this->data->getInvoiceAfterConfirmation() === 1) {

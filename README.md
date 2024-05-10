@@ -13,6 +13,7 @@
 - [x] 2.4.3
 - [x] 2.4.4
 - [x] 2.4.5
+- [x] 2.4.6
  
 ### Pré requisito:
 
@@ -109,3 +110,10 @@ OBS: Para que todas as configurações a seguir funcionem, todo o passo a passo 
     - Habilita ou desabilita o método de pagamento com Pix.
 
 ![FOTO 5](.github/img/05.png)
+
+### Nota
+
+- É importante alterar o tempo que um pedido que está com pagamento pendente fica em aberto pela configuração padrão do Magento. O tempo em minutos setado na imagem abaixo tem que ser maior que o tempo de validade de um pedido feito por boleto ou por Pix. Por exemplo, 10080 minutos equivale a 7 dias.
+- Caminho `Configuração` -> `Vendas` -> `Configuração Pedidos Cron` -> `Tempo Expiração Pedido Com Pagamento Pendente (minutos)`
+
+![FOTO 6](.github/img/06.png)

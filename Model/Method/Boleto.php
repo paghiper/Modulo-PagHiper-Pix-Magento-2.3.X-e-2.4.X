@@ -5,12 +5,12 @@ namespace Paghiper\Magento2\Model\Method;
 use Exception as ExceptionSituation;
 use Magento\Framework\Exception\LocalizedException;
 use Psr\Log\LoggerInterface;
+use Magento\Framework\HTTP\Client\Curl;
 
 /**
  * Class Payment Billet
  *
  * @see       https://www.paghiper.com.br Official Website
- * @author    Tezus (and others) <suporte@tezus.com.br>
  * @copyright https://www.paghiper.com.br
  * @license   https://www.gnu.org/licenses/gpl-3.0.pt-br.html GNU GPL, version 3
  */
@@ -19,8 +19,11 @@ class Boleto extends \Magento\Payment\Model\Method\AbstractMethod
     /**
      * @var string
      */
-    const CODE = 'paghiper_boleto';
+    protected const CODE = 'paghiper_boleto';
 
+    /**
+     * @var string
+     */
     protected $_code = self::CODE;
 
     /**
@@ -40,7 +43,30 @@ class Boleto extends \Magento\Payment\Model\Method\AbstractMethod
      */
     private $_curlFactory;
 
+    /**
+     * @var Curl
+     */
+    protected $curl;
+
+    /**
+     * @param Curl $curl
+     * @param \Magento\Framework\Model\Context $context
+     * @param \Magento\Framework\Registry $registry
+     * @param \Magento\Framework\Api\ExtensionAttributesFactory $extensionFactory
+     * @param \Magento\Framework\Api\AttributeValueFactory $customAttributeFactory
+     * @param \Magento\Payment\Helper\Data $paymentData
+     * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
+     * @param \Magento\Payment\Model\Method\Logger $logger
+     * @param \Paghiper\Magento2\Helper\Data $helper
+     * @param \Magento\Store\Model\StoreManagerInterface $storeManager
+     * @param LoggerInterface $loggerInterface
+     * @param \Magento\Framework\HTTP\Adapter\CurlFactory $_curlFactory
+     * @param \Magento\Framework\Model\ResourceModel\AbstractResource|null $resource
+     * @param \Magento\Framework\Data\Collection\AbstractDb|null $resourceCollection
+     * @param array $data
+     */
     public function __construct(
+        \Magento\Framework\HTTP\Client\Curl $curl,
         \Magento\Framework\Model\Context $context,
         \Magento\Framework\Registry $registry,
         \Magento\Framework\Api\ExtensionAttributesFactory $extensionFactory,
@@ -68,6 +94,7 @@ class Boleto extends \Magento\Payment\Model\Method\AbstractMethod
             $resourceCollection,
             $data
         );
+        $this->curl = $curl;
         $this->helperData = $helper;
         $this->_storeManager = $storeManager;
         $this->_loggerInterface = $loggerInterface;
@@ -89,6 +116,10 @@ class Boleto extends \Magento\Payment\Model\Method\AbstractMethod
     }
 
     /**
+     * Order
+     *
+     * @param \Magento\Payment\Model\InfoInterface $payment
+     * @param mixed $amount
      * @throws LocalizedException
      */
     public function order(\Magento\Payment\Model\InfoInterface $payment, $amount)
@@ -202,37 +233,31 @@ class Boleto extends \Magento\Payment\Model\Method\AbstractMethod
         }
         return $this;
     }
-    
+
+    /**
+     * Do payment
+     *
+     * @param mixed $data
+     * @return mixed
+     */
     public function doPayment($data)
     {
         $url = 'https://api.paghiper.com/transaction/create/';
-        $curlHeaders = [
-          "Content-Type: application/json",
-          "Accept: application/json"
-        ];
+        $headers = ["Content-Type" => "application/json", "Accept" => "application/json"];
         $curlBody = json_encode($data);
-    
-        /** @var \Magento\Framework\HTTP\Adapter\Curl $curlObject */
-        $curlObject = $this->_curlFactory->create();
-        $curlObject->setConfig([
-          CURLOPT_RETURNTRANSFER => true,
-          CURLOPT_ENCODING => "",
-          CURLOPT_MAXREDIRS => 10,
-          CURLOPT_TIMEOUT => 0,
-          CURLOPT_FOLLOWLOCATION => true,
-        ]);
-    
-        $curlObject->connect($url);
-        $curlObject->write(\Zend_Http_Client::POST, $url, '1.1', $curlHeaders, $curlBody);
-        $response = $curlObject->read();
-        $curlObject->close();
-    
-        $response = preg_split('/^\r?$/m', $response, 2);
-        $response = trim($response[1]);
-    
+        $this->curl->setHeaders($headers);
+        $this->curl->post($url, $curlBody);
+        $response = $this->curl->getBody();
         return json_decode($response);
     }
 
+    /**
+     * Assign data
+     *
+     * @param \Magento\Framework\DataObject $data
+     * @return $this|Boleto
+     * @throws LocalizedException
+     */
     public function assignData(\Magento\Framework\DataObject $data)
     {
         $info = $this->getInfoInstance();
