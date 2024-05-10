@@ -88,7 +88,7 @@ In the first information block, there is the configuration to enable or disable 
 - Token
     - Token provided by PagHiper.
 
-- Days of Validity
+- Validity Days
     - This option is used for both boleto and Pix. An integer value in days is used to specify the validity of the boleto.
 
   ![FOTO 3](.github/img/03.png)
