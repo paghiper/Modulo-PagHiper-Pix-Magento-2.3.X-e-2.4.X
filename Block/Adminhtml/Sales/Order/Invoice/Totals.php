@@ -13,12 +13,12 @@ class Totals extends Template
      * @var Invoice
      */
     protected $_invoice;
-  
+
     /**
      * @var DataObject
      */
     protected $_source;
-  
+
     /**
      * Get data (totals) source model
      *
@@ -28,7 +28,7 @@ class Totals extends Template
     {
         return $this->getParentBlock()->getSource();
     }
-  
+
     /**
      * Get invoice
      *
@@ -38,7 +38,7 @@ class Totals extends Template
     {
         return $this->getParentBlock()->getInvoice();
     }
-  
+
     /**
      * Initialize payment fee totals
      *
@@ -49,19 +49,19 @@ class Totals extends Template
         $this->getParentBlock();
         $this->getInvoice();
         $this->getSource();
-    
+
         if (!$this->getSource()->getDataByKey('paghiper_fee_amount')) {
             return $this;
         }
-    
+
         $total = new DataObject(
             [
                 'code' => 'paghiper_fee',
                 'value' => $this->getSource()->getDataByKey('paghiper_fee_amount'),
-                'label' => __('Juros/Multa Paghiper')
+                'label' => __('Interest/Paghiper Fine')
             ]
         );
-    
+
         $this->getParentBlock()->addTotal($total, 'paghiper_fee');
         return $this;
     }

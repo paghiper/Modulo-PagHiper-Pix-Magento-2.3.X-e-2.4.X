@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @author Mathias Matas Hennig <mathias@tezus.com.br>
  */
@@ -18,17 +19,17 @@ class CreateInvoice
      * @var OrderRepositoryInterface
      */
     protected $orderRepository;
-    
+
     /**
      * @var InvoiceService
      */
     protected $invoiceService;
-    
+
     /**
      * @var Transaction
      */
     protected $transaction;
-    
+
     /**
      * @var InvoiceSender
      */
@@ -75,17 +76,17 @@ class CreateInvoice
                 $invoice = $this->invoiceService->prepareInvoice($order);
                 $invoice->register();
                 $invoice->save();
-      
+
                 $transactionSave = $this->transaction
-                  ->addObject($invoice)
-                  ->addObject($invoice->getOrder());
-      
+                    ->addObject($invoice)
+                    ->addObject($invoice->getOrder());
+
                 $transactionSave->save();
-      
+
                 $this->invoiceSender->send($invoice);
-                
+
                 $order->addCommentToStatusHistory(__(
-                    'Fatura Número #%1 foi criada. PagHiper Transaction Id: %2',
+                    'Invoice Number #%1 has been created. PagHiper Transaction Id: %2',
                     [$invoice->getId(), $order->getData('paghiper_transaction')]
                 ));
             }

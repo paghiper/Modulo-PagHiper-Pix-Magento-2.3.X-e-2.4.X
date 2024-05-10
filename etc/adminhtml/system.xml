@@ -1,22 +1,22 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
   <system>
     <section id="payment">
-      <group id="paghiper" translate="label" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
-        <label>PagHiper - Configurações Gerais</label>
+      <group id="paghiper" translate="label comment" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
+        <label>PagHiper - General Settings</label>
         <!--Inicio configurações Gerais-->
-        <field id="enabled" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="0">
-          <label>Habilitado</label>
-          <comment>Ativar ou desativar o módulo por completo.</comment>
+        <field id="enabled" translate="label comment" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="0">
+          <label>Enabled</label>
+          <comment>Enable or disable the module.</comment>
           <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
         </field>
-        <field id="api_key" translate="label" type="text" sortOrder="3" showInDefault="1" showInWebsite="1" showInStore="0">
+        <field id="api_key" translate="label comment" type="text" sortOrder="3" showInDefault="1" showInWebsite="1" showInStore="0">
           <label>Api Key</label>
           <validate>required-entry</validate>
           <depends>
             <field id="enabled">1</field>
           </depends>
         </field>
-        <field id="token" translate="label" type="text" sortOrder="4" showInDefault="1" showInWebsite="1" showInStore="0">
+        <field id="token" translate="label comment" type="text" sortOrder="4" showInDefault="1" showInWebsite="1" showInStore="0">
           <label>Token</label>
           <validate>required-entry</validate>
           <depends>
@@ -25,64 +25,64 @@
         </field>
         <!--Fim das configurações gerais-->
         <!-- Opções boleto e Pix-->
-        <field id="validade" translate="label" type="text" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="0">
-          <label>Dias de validade</label>
+        <field id="validade" translate="label comment" type="text" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="0">
+          <label>Validity Days</label>
           <validate>required-entry validate-digits</validate>
           <depends>
             <field id="enabled">1</field>
           </depends>
         </field>
-        <field id="invoice_auto" translate="label" type="select" sortOrder="6" showInDefault="1" showInWebsite="1" showInStore="0">
-          <label>Faturar Após Pagamento Confirmado?</label>
+        <field id="invoice_auto" translate="label comment" type="select" sortOrder="6" showInDefault="1" showInWebsite="1" showInStore="0">
+          <label>Invoice After Confirmed Payment?</label>
           <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
           <depends>
             <field id="enabled">1</field>
           </depends>
         </field>        
       </group>
-      <group id="paghiper_boleto" translate="label" sortOrder="101" showInDefault="1" showInWebsite="1" showInStore="1">
-        <label>PagHiper - Configurações de Boleto</label>
-        <field id="ativar_boleto" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="0">
-          <label>Habilitado</label>
+      <group id="paghiper_boleto" translate="label comment" sortOrder="101" showInDefault="1" showInWebsite="1" showInStore="1">
+        <label>PagHiper - Boleto Settings</label>
+        <field id="ativar_boleto" translate="label comment" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="0">
+          <label>Enabled</label>
           <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
         </field>
-        <field id="percentual_multa" translate="label" type="text" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="0">
-          <label>Percentual de Multa</label>
+        <field id="percentual_multa" translate="label comment" type="text" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="0">
+          <label>Penalty Percentage</label>
           <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-          <comment>Percentual Máximo permitido de 2%</comment>
+          <comment>Maximum 2%</comment>
           <validate>required-entry validate-number</validate>
         </field>
-        <field id="juros_atraso" translate="label" type="select" sortOrder="3" showInDefault="1" showInWebsite="1" showInStore="0">
-          <label>Juros por Atraso</label>
+        <field id="juros_atraso" translate="label comment" type="select" sortOrder="3" showInDefault="1" showInWebsite="1" showInStore="0">
+          <label>Interest for Late Payment</label>
           <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-          <comment>Aplica 1% de juros máximo ao mês, esse percentual será cobrado proporcionalmente aos dias de atraso.</comment>
+          <comment>Maximum 1% interest applies per month, this percentage will be charged proportionally to the days of delay.</comment>
           <validate>required-entry validate-number</validate>
         </field>
-        <field id="dias_pagamento_antecipado" translate="label" type="text" sortOrder="4" showInDefault="1" showInWebsite="1" showInStore="0">
-          <label>Número de dias do Desconto</label>
+        <field id="dias_pagamento_antecipado" translate="label comment" type="text" sortOrder="4" showInDefault="1" showInWebsite="1" showInStore="0">
+          <label>Number of Discount Days</label>
           <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-          <comment>Número de dias em que o pagamento pode ser realizado com antecedência recebendo o desconto extra.</comment>
+          <comment>Number of days in which payment can be made in advance and receive the extra discount.</comment>
           <validate>required-entry validate-digits</validate>
         </field>
-        <field id="valor_desconto_antecipado" translate="label" type="text" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="0">
-          <label>Valor do desconto para pagamento antecipado</label>
+        <field id="valor_desconto_antecipado" translate="label comment" type="text" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="0">
+          <label>Discount Value for Early Payment</label>
           <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-          <comment>Valor do desconto que será aplicado caso o pagamento ocorra de forma antecipada.</comment>
+          <comment>Amount of discount that will be applied if payment is made in advance.</comment>
           <validate>required-entry validate-number</validate>
         </field>
-        <field id="numero_apos_vencimento" translate="label" type="text" sortOrder="6" showInDefault="1" showInWebsite="1" showInStore="0">
-          <label>Número de dias após o vencimento</label>
+        <field id="numero_apos_vencimento" translate="label comment" type="text" sortOrder="6" showInDefault="1" showInWebsite="1" showInStore="0">
+          <label>Number of Days After Expiry</label>
           <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-          <comment>Número máximo de dias em que o boleto poderá ser pago após o vencimento.</comment>
+          <comment>Maximum number of days in which the bill can be paid after the due date.</comment>
           <validate>required-entry validate-digits</validate>
         </field>
       </group>
       <!--Fim das opções de boleto-->
       <!-- Inicio configurações Pix -->
-      <group id="paghiper_pix" translate="label" sortOrder="102" showInDefault="1" showInWebsite="1" showInStore="1">
-        <label>PagHiper - Configurações do Pix</label>
-        <field id="ativar_pix" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="0">
-          <label>Habilitado</label>
+      <group id="paghiper_pix" translate="label comment" sortOrder="102" showInDefault="1" showInWebsite="1" showInStore="1">
+        <label>PagHiper - Pix Settings</label>
+        <field id="ativar_pix" translate="label comment" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="0">
+          <label>Enabled</label>
           <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
         </field>
       </group>

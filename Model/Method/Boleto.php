@@ -149,7 +149,7 @@ class Boleto extends \Magento\Payment\Model\Method\AbstractMethod
             $dataUser['payer_phone'] = $billingaddress->getTelephone();
 
             if (!isset($billingaddress->getStreet()[2])) {
-                throw new ExceptionSituation(__("Por favor, preencha seu endereço corretamente."), 1);
+                throw new ExceptionSituation(__("Please fill in your address correctly."), 1);
             }
 
             if (isset($billingaddress->getStreet()[3])) {
@@ -166,7 +166,7 @@ class Boleto extends \Magento\Payment\Model\Method\AbstractMethod
             $dataUser['payer_state'] = $stateBillingAddress;
             $dataUser['payer_zip_code'] = str_replace("-", "", $billingaddress->getPostcode());
             $dataUser['notification_url'] =
-              $this->_storeManager->getStore()->getBaseUrl() . 'paghiper/notification/updatestatus';
+                $this->_storeManager->getStore()->getBaseUrl() . 'paghiper/notification/updatestatus';
 
             $discount = str_replace("-", "", $order->getDiscountAmount()) * 100;
             if ($discount > 0) {
@@ -209,7 +209,7 @@ class Boleto extends \Magento\Payment\Model\Method\AbstractMethod
                 $dataUser['items'][$i]['item_id'] = 'taxes';
                 $dataUser['items'][$i]['price_cents'] = $order->getTaxAmount() * 100;
             }
-      
+
             $this->_loggerInterface->notice(json_encode($dataUser));
             $response = (array)$this->doPayment($dataUser);
             $this->_loggerInterface->notice(json_encode($response));
@@ -227,7 +227,6 @@ class Boleto extends \Magento\Payment\Model\Method\AbstractMethod
 
             $order->setState(\Magento\Sales\Model\Order::STATE_PENDING_PAYMENT);
             $order->setStatus(\Magento\Sales\Model\Order::STATE_PENDING_PAYMENT);
-
         } catch (ExceptionSituation $e) {
             throw new \Magento\Framework\Exception\LocalizedException(__($e->getMessage()));
         }

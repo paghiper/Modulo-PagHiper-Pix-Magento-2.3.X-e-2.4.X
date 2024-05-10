@@ -50,7 +50,7 @@ class UpdateStatus extends Action implements CsrfAwareActionInterface
      * @var CurlFactory
      */
     private $_curlFactory;
-    
+
     /**
      * @var CreateInvoice
      */
@@ -106,17 +106,18 @@ class UpdateStatus extends Action implements CsrfAwareActionInterface
     {
         try {
             $params = $this->getRequest()->getParams();
-            if (isset($params['apiKey']) &&
+            if (
+                isset($params['apiKey']) &&
                 isset($params['transaction_id']) &&
                 isset($params['notification_id']) &&
                 isset($params['notification_date'])
             ) {
                 $searchCriteria = $this->searchCriteriaBuilder
-                ->addFilter(
-                    'paghiper_transaction',
-                    $params['transaction_id'],
-                    'eq'
-                )->create();
+                    ->addFilter(
+                        'paghiper_transaction',
+                        $params['transaction_id'],
+                        'eq'
+                    )->create();
 
                 $collection = $this->orderRepository->getList($searchCriteria);
 
@@ -125,28 +126,28 @@ class UpdateStatus extends Action implements CsrfAwareActionInterface
                     $paymentMethod = $order->getPayment()->getMethod();
 
                     $request = [
-                      'token' => $this->helperData->getToken(),
-                      'apiKey' => $this->helperData->getAcessToken(),
-                      'transaction_id' => $params['transaction_id'],
-                      'notification_id' => $params['notification_id']
+                        'token' => $this->helperData->getToken(),
+                        'apiKey' => $this->helperData->getAcessToken(),
+                        'transaction_id' => $params['transaction_id'],
+                        'notification_id' => $params['notification_id']
                     ];
-                    
+
                     $url = $paymentMethod == static::PAGHIPER_BOLETO ? static::URL_BOLETO : static::URL_PIX;
                     $headers = ["Content-Type" => "application/json", "Accept" => "application/json"];
                     $curlBody = json_encode($request);
                     $this->curl->setHeaders($headers);
                     $this->curl->post($url, $curlBody);
                     $response = $this->curl->getBody();
-                    
+
                     $base = json_decode($response)->status_request;
-                      
+
                     if ($base->result === static::STATUS_SUCCESS) {
                         if (!$order->getId()) {
                             throw new ExceptionWebapi(__("Order Id not found"), 0, ExceptionWebapi::HTTP_NOT_FOUND);
                         }
-                        
+
                         $event = $base->status;
-                        
+
                         if ($event == static::STATUS_PAID) {
                             $totalPaid = $base->value_cents_paid / 100;
                             $paghiperTax = $totalPaid - $order->getGrandTotal();
@@ -157,9 +158,9 @@ class UpdateStatus extends Action implements CsrfAwareActionInterface
                             $order->setDiscountAmount($paghiperTax);
                             $order->setGrandTotal($totalPaid);
                             $order->setTotalPaid($totalPaid);
-                          
+
                             $this->createInvoice->execute($order);
-                          
+
                             $this->orderRepository->save($order);
                         } elseif ($event == static::STATUS_REFUNDED || $event == static::STATUS_CANCELED) {
                             $order->setState(\Magento\Sales\Model\Order::STATE_CANCELED);
@@ -171,7 +172,7 @@ class UpdateStatus extends Action implements CsrfAwareActionInterface
             }
         } catch (ExceptionWebapi $e) {
             $this->_logger->notice($e->getMessage());
-            throw new ExceptionWebapi(__("Erro interno!"), 0, ExceptionWebapi::HTTP_INTERNAL_ERROR);
+            throw new ExceptionWebapi(__("Internal error"), 0, ExceptionWebapi::HTTP_INTERNAL_ERROR);
         }
     }
 
