@@ -15,6 +15,8 @@ use Magento\Sales\Model\Order\Payment\Transaction;
 class OrderOperation extends \Magento\Sales\Model\Order\Payment\Operations\OrderOperation
 {
     /**
+     * Order
+     *
      * @param OrderPaymentInterface $payment
      * @param string|float $amount
      * @return OrderPaymentInterface

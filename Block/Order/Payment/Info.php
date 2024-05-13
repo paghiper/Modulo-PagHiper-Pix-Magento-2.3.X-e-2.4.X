@@ -4,9 +4,21 @@ namespace Paghiper\Magento2\Block\Order\Payment;
 
 class Info extends \Magento\Framework\View\Element\Template
 {
+    /**
+     * @var \Magento\Checkout\Model\Session
+     */
     protected $_checkoutSession;
+    /**
+     * @var \Magento\Sales\Model\Order
+     */
     protected $_orderFactory;
 
+    /**
+     * @param \Magento\Framework\View\Element\Template\Context $context
+     * @param \Magento\Checkout\Model\Session $checkoutSession
+     * @param \Magento\Sales\Model\Order $orderFactory
+     * @param array $data
+     */
     public function __construct(
         \Magento\Framework\View\Element\Template\Context $context,
         \Magento\Checkout\Model\Session $checkoutSession,
@@ -18,6 +30,11 @@ class Info extends \Magento\Framework\View\Element\Template
         $this->_orderFactory = $orderFactory;
     }
 
+    /**
+     * Get payment method
+     *
+     * @return string
+     */
     public function getPaymentMethod()
     {
         $order_id = $this->getRequest()->getParam('order_id');
@@ -26,6 +43,11 @@ class Info extends \Magento\Framework\View\Element\Template
         return $payment->getMethod();
     }
 
+    /**
+     * Get payment info
+     *
+     * @return array|false
+     */
     public function getPaymentInfo()
     {
         $order_id = $this->getRequest()->getParam('order_id');

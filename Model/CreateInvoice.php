@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @author Mathias Matas Hennig <mathias@tezus.com.br>
  */
@@ -18,17 +19,17 @@ class CreateInvoice
      * @var OrderRepositoryInterface
      */
     protected $orderRepository;
-    
+
     /**
      * @var InvoiceService
      */
     protected $invoiceService;
-    
+
     /**
      * @var Transaction
      */
     protected $transaction;
-    
+
     /**
      * @var InvoiceSender
      */
@@ -39,6 +40,13 @@ class CreateInvoice
      */
     protected $data;
 
+    /**
+     * @param OrderRepositoryInterface $orderRepository
+     * @param InvoiceService $invoiceService
+     * @param InvoiceSender $invoiceSender
+     * @param Transaction $transaction
+     * @param Data $data
+     */
     public function __construct(
         OrderRepositoryInterface $orderRepository,
         InvoiceService           $invoiceService,
@@ -53,10 +61,13 @@ class CreateInvoice
         $this->data =            $data;
     }
 
-  /**
-   * @throws LocalizedException
-   * @throws \Exception
-   */
+    /**
+     * Execute
+     *
+     * @param mixed $order
+     * @throws LocalizedException
+     * @throws \Exception
+     */
     public function execute($order)
     {
         if ((int) $this->data->getInvoiceAfterConfirmation() === 1) {
@@ -65,17 +76,17 @@ class CreateInvoice
                 $invoice = $this->invoiceService->prepareInvoice($order);
                 $invoice->register();
                 $invoice->save();
-      
+
                 $transactionSave = $this->transaction
-                  ->addObject($invoice)
-                  ->addObject($invoice->getOrder());
-      
+                    ->addObject($invoice)
+                    ->addObject($invoice->getOrder());
+
                 $transactionSave->save();
-      
+
                 $this->invoiceSender->send($invoice);
-                
+
                 $order->addCommentToStatusHistory(__(
-                    'Fatura Número #%1 foi criada. PagHiper Transaction Id: %2',
+                    'Invoice Number #%1 has been created. PagHiper Transaction Id: %2',
                     [$invoice->getId(), $order->getData('paghiper_transaction')]
                 ));
             }

@@ -4,6 +4,11 @@ namespace Paghiper\Magento2\Block\Adminhtml\Order\View;
 
 class Custom extends \Magento\Backend\Block\Template
 {
+    /**
+     * @param \Magento\Backend\Block\Template\Context $context
+     * @param \Magento\Sales\Model\Order $order
+     * @param array $data
+     */
     public function __construct(
         \Magento\Backend\Block\Template\Context $context,
         \Magento\Sales\Model\Order $order,
@@ -13,6 +18,11 @@ class Custom extends \Magento\Backend\Block\Template
         parent::__construct($context, $data);
     }
 
+    /**
+     * Get payment method
+     *
+     * @return string
+     */
     public function getPaymentMethod()
     {
         $order_id = $this->getRequest()->getParam('order_id');
@@ -21,6 +31,11 @@ class Custom extends \Magento\Backend\Block\Template
         return $payment->getMethod();
     }
 
+    /**
+     * Get payment info
+     *
+     * @return array|false
+     */
     public function getPaymentInfo()
     {
         $order_id = $this->getRequest()->getParam('order_id');
