@@ -1,0 +1,30 @@
+"Interest/Paghiper Fine","Juros/Multa PagHiper"
+"Order Id not found","ID do pedido não encontrado"
+"Internal error","Erro interno"
+"Invoice Number #%1 has been created. PagHiper Transaction Id: %2","Número da Fatura #%1 foi criado. ID da Transação PagHiper: %2"
+"Please fill in your address correctly.","Por favor, preencha seu endereço corretamente."
+"Digitable line","Linha digitável"
+Copy,Copiar
+"View Billet","Visualizar Boleto"
+CPF/CNPJ,CPF/CNPJ
+"Place Order","Finalizar Pedido"
+CPF,CPF
+"PagHiper - General Settings","PagHiper - Configurações Gerais"
+Enabled,Habilitado
+"Enable or disable the module.","Habilitar ou desabilitar o módulo."
+"Api Key","Chave API"
+Token,Token
+"Validity Days","Dias de Validade"
+"Invoice After Confirmed Payment?","Faturar Após Pagamento Confirmado?"
+"PagHiper - Boleto Settings","PagHiper - Configurações de Boleto"
+"Penalty Percentage","Percentual de Multa"
+"Maximum 2%","Máximo de 2%"
+"Interest for Late Payment","Juros por Atraso"
+"Maximum 1% interest applies per month, this percentage will be charged proportionally to the days of delay.","Máximo de 1% de juros ao mês, esse percentual será cobrado proporcionalmente aos dias de atraso."
+"Number of Discount Days","Número de Dias do Desconto"
+"Number of days in which payment can be made in advance and receive the extra discount.","Número de dias nos quais o pagamento pode ser feito antecipadamente e receber o desconto extra."
+"Discount Value for Early Payment","Valor do Desconto para Pagamento Antecipado"
+"Amount of discount that will be applied if payment is made in advance.","Valor do desconto que será aplicado se o pagamento for feito antecipadamente."
+"Number of Days After Expiry","Número de Dias Após o Vencimento"
+"Maximum number of days in which the bill can be paid after the due date.","Número máximo de dias em que o boleto pode ser pago após a data de vencimento."
+"PagHiper - Pix Settings","PagHiper - Configurações do Pix"

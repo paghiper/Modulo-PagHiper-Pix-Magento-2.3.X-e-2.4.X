@@ -6,6 +6,6 @@
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
-  <preference for="\Magento\Sales\Model\Order\Payment\Operations\OrderOperation" 
-    type="\Paghiper\Magento2\Model\Order\Payment\Operations\OrderOperation"/>
+  <preference for="Magento\Sales\Model\Order\Payment\Operations\OrderOperation" 
+    type="Paghiper\Magento2\Model\Order\Payment\Operations\OrderOperation"/>
 </config>
