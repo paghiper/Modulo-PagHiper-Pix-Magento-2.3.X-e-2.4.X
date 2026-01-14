@@ -18,6 +18,16 @@
 .linha-digitavel{
   margin-left: 15px;
 }
+.just-center{
+  justify-content: center;
+}
+.column{
+  flex-direction: column;
+}
+.alg-center{
+  align-items: center;
+}
+
 @media screen and (max-width: 1366px){
   .modalpix .modal-inner-wrap{
     width: 50%;
@@ -31,5 +41,9 @@
 @media screen and (max-width: 768px){
   .modalpix .modal-inner-wrap{
     width: 80%;
+  }
+  .flex .linhes {
+    width: 100%;
+    margin-bottom: 30px;
   }
 }

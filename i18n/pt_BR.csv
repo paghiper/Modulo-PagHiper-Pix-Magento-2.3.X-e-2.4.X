@@ -28,3 +28,7 @@ Token,Token
 "Number of Days After Expiry","Número de Dias Após o Vencimento"
 "Maximum number of days in which the bill can be paid after the due date.","Número máximo de dias em que o boleto pode ser pago após a data de vencimento."
 "PagHiper - Pix Settings","PagHiper - Configurações do Pix"
+"Expiration", "Tempo de Expiração em minutos"
+"Expiration time for the Pix payment in minutes (1 to 576000 minutes.)","Expiração do PIX em minutos (Insira um valor entre 1 a 576000 minutos)"
+"The value must be an integer.","O valor de expiração do pix precisa ser um numero inteiro."
+"The value must be between 1 and 576000 minutes.","O valor de expiração do pix precisa estar entre 1 e 576000 minutos"

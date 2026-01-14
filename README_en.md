@@ -46,10 +46,10 @@ If your store was created by cloning or downloading the Magento project, follow 
 2. Within the installation directory of your store, create the folder structure app/code/Paghiper/Magento2.
 3. Extract the contents of the zip file into this folder.
 4. Enable the module with the following command: bin/magento module:enable Paghiper_Magento2 --clear-static-content.
-5. Run the command bin/magento setup:upgrade.
-6. Run the command bin/magento setup:di:compile.
-7. Run the command bin/magento setup:static-content:deploy -f.
-8. Run the command bin/magento cache:clean.
+5. Run the command ```bin/magento setup:upgrade```.
+6. Run the command ```bin/magento setup:di:compile```.
+7. Run the command ```bin/magento setup:static-content:deploy -f```.
+8. Run the command ```bin/magento cache:clean```.
 
 ### Configurations
 
@@ -59,11 +59,11 @@ To configure the address settings in the Magento Admin Panel, follow these steps
 2. Then click on `Configuration`.
 3. Next, click on `Customers`, then `Customer Configuration`.
 4. Access the `Name and Address Options`.
-5. In `Number of Lines in Address`, you should enter the number 4.
+5. In `Number of Lines in Street Address`, you should enter the number 4.
 
 This setting adjusts how many lines are used in the address format, allowing you to accommodate the required fields for your customer addresses:
 
-![FOTO 1](.github/img/01.png)
+![FOTO 1](.github/img/en/01.png)
 
 After configuring the Customer settings, follow these steps to access and configure the payment methods in the Magento Admin Panel:
 
@@ -75,7 +75,7 @@ After configuring the Customer settings, follow these steps to access and config
 From this screen, you can set up and manage various payment options available to your customers during the checkout process.
 
 <p align="center">
-  <img src=".github/img/02.png" />
+  <img src=".github/img/en/02.png" />
 </p>
 
 ### How to enable PagHiper in your store
@@ -91,10 +91,10 @@ In the first information block, there is the configuration to enable or disable 
 - Validity Days
   - This option is used for both boleto and Pix. An integer value in `days` is used to specify the validity period of the payment
 
-- Invoice After Confirmed Payment
+- Invoice After Confirmed Payment?
   - The invoice is generated only after the payment has been confirmed.
 
-![FOTO 3](.github/img/03.png)
+![FOTO 3](.github/img/en/03.png)
 
 Just below, there are two options, one for payment configuration with Pix and another with boleto.
 
@@ -105,7 +105,7 @@ NOTE: For all the following configurations to work, all the previous steps must 
 - **Enabled**
   - Enables or disables boleto as a payment method.
 
-- **Late Payment Penalty Percentage**
+- **Penalty Percentage**
   - Adds a percentage value as a penalty for late payment.
 
 - **Interest for Late Payment**
@@ -119,13 +119,13 @@ NOTE: For all the following configurations to work, all the previous steps must 
 
 - **Number of Days After Expiry**
   - The number of days a customer can still pay the boleto after its due date.
-    ![FOTO 4](.github/img/04.png)
+    ![FOTO 4](.github/img/en/04.png)
 
 ### Pix Settings
 
 - **Enabled**
   - Enables or disables the Pix payment method.
-    ![FOTO 5](.github/img/05.png)
+    ![FOTO 5](.github/img/en/05.png)
 
 - **Expiration**
   - Expiration time for the Pix payment in minutes. If not provided, the value from the `Validity Days` field will be used.
@@ -133,5 +133,5 @@ NOTE: For all the following configurations to work, all the previous steps must 
 ### Note
 
 - It is important to adjust the duration that an order with pending payment remains open beyond the default Magento configuration. The time in minutes set in the image below must be greater than the validity period of an order made by boleto or Pix. For example, 10080 minutes is equivalent to 7 days.
-- Path: `Configuration` -> `Sales` -> `Cron Order Settings` -> `Pending Payment Order Expiration Time (minutes)`
-  ![FOTO 6](.github/img/06.png)
+- Path: `Stores` -> `Configuration` -> `Sales` -> `Sales` -> `Cron Order Settings` -> `Pending Payment Order Expiration Time (minutes)`
+  ![FOTO 6](.github/img/en/06.png)

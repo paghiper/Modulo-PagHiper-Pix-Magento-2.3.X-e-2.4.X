@@ -1,55 +1,78 @@
 <?php
-
-/**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
- */
-
 /** @var $block \Magento\Checkout\Block\Onepage\Success */
+
 $order = $block->getOrder();
-$qrcodepix = $order->getPaghiperPix();
-$boleto = $order->getPaghiperBoleto();
+$qrcodepix       = $order->getPaghiperPix();
+$boleto          = $order->getPaghiperBoleto();
 $linha_digitavel = $order->getPaghiperBoletoDigitavel();
-$chavepix = $order->getPaghiperChavepix();
-$payment = $order->getPayment();
+$chavepix        = $order->getPaghiperChavepix();
+$payment         = $order->getPayment();
+$expirationPix   = $block->getExpirationPix();
 ?>
+
 <?php if ($payment->getMethod() === 'paghiper_pix') : ?>
-  <div class="actions-toolbar flex">
+  <div class="actions-toolbar flex just-center column alg-center">
     <div class="primary">
-      <img src="<?= /* @noEscape */ $qrcodepix ?>" />
+      <h2>
+        ⏰ Pague o PIX em <?= $block->escapeHtml($expirationPix); ?>!
+      </h2>
+
+      <img alt="pix-qrcode" src="<?= $block->escapeUrl($qrcodepix); ?>" />
     </div>
+
     <div class="linhes">
-      <h3> <?php echo __('Digitable line'); ?></h3>
-      <textarea readonly rows="5" name="pixer" id="select-this"><?= /* @noEscape */ $chavepix ?></textarea>
+      <h3><?= $block->escapeHtml(__('Digitable line')); ?></h3>
+
+      <textarea readonly rows="5" name="pixer" id="select-this">
+        <?= $block->escapeHtml($chavepix); ?>
+      </textarea>
+
       <div class="actions-toolbar">
         <div class="primary">
-          <button id='clickMe'><?php echo __('Copy'); ?></button>
+          <button id="clickMe">
+            <?= $block->escapeHtml(__('Copy')); ?>
+          </button>
         </div>
       </div>
     </div>
   </div>
-<?php endif ?>
+<?php endif; ?>
+
 <?php if ($payment->getMethod() === 'paghiper_boleto') : ?>
   <div class="actions-toolbar flex">
     <div class="linhes">
-      <h3><?php echo __('Digitable line'); ?></h3>
+      <h3><?= $block->escapeHtml(__('Digitable line')); ?></h3>
+
       <div class="flex">
-        <textarea readonly rows="1" name="pixer" id="select-this"><?= /* @noEscape */ $linha_digitavel ?></textarea>
+        <textarea readonly rows="1" name="pixer" id="select-this">
+          <?= $block->escapeHtml($linha_digitavel); ?>
+        </textarea>
+
         <div class="actions-toolbar linha-digitavel">
           <div class="primary">
-            <button id='clickMe'><?php echo __('Copy'); ?></button>
+            <button id="clickMe">
+              <?= $block->escapeHtml(__('Copy')); ?>
+            </button>
           </div>
         </div>
       </div>
     </div>
   </div>
+
   <div class="view-boleto">
-    <iframe src="<?= /* @noEscape */ $boleto ?>" width="100%" height="500px">
+    <iframe
+      src="<?= $block->escapeUrl($boleto); ?>"
+      width="100%"
+      height="500px">
     </iframe>
   </div>
+
   <div class="primary">
-    <a target="_blank" class="action primary continue" href="<?= /* @noEscape */ $boleto ?>">
-      <span><?php echo __('View Billet'); ?></span>
+    <a
+      target="_blank"
+      class="action primary continue"
+      href="<?= $block->escapeUrl($boleto); ?>">
+      <span><?= $block->escapeHtml(__('View Billet')); ?></span>
     </a>
   </div>
-<?php endif ?>
+<?php endif; ?>

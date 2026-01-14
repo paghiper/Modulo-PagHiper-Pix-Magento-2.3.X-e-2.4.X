@@ -31,12 +31,14 @@ class Success extends \Magento\Sales\Block\Order\Totals
         \Magento\Sales\Model\OrderFactory $orderFactory,
         \Magento\Framework\View\Element\Template\Context $context,
         \Magento\Framework\Registry $registry,
+        \Paghiper\Magento2\Helper\Data $helper,
         array $data = []
     ) {
         parent::__construct($context, $registry, $data);
         $this->checkoutSession = $checkoutSession;
         $this->customerSession = $customerSession;
         $this->_orderFactory = $orderFactory;
+        $this->helperData = $helper;
     }
 
     /**
@@ -70,4 +72,47 @@ class Success extends \Magento\Sales\Block\Order\Totals
     {
         return $this->customerSession->getCustomer()->getId();
     }
+
+  /**
+   * Get Pix Expiration in Minutes
+   *
+   * @return mixed
+   */
+  public function getExpirationPix()
+  {
+    return  $this->formatExpirationTime($this->helperData->getPixExpirationInMinutes());
+  }
+
+  function formatExpirationTime($minutes)
+  {
+    if ($minutes < 60) {
+      return $minutes . ' minuto' . ($minutes !== 1 ? 's' : '');
+    }
+
+    if ($minutes < 1440) {
+      $hours = intdiv($minutes, 60);
+      $remainingMinutes = $minutes % 60;
+
+      $result = $hours . ' hora' . ($hours !== 1 ? 's' : '');
+
+      if ($remainingMinutes > 0) {
+        $result .= ' e ' . $remainingMinutes . ' minuto' . ($remainingMinutes !== 1 ? 's' : '');
+      }
+
+      return $result;
+    }
+
+    $days = intdiv($minutes, 1440);
+    $remainingMinutes = $minutes % 1440;
+    $hours = intdiv($remainingMinutes, 60);
+
+    $result = $days . ' dia' . ($days !== 1 ? 's' : '');
+
+    if ($hours > 0) {
+      $result .= ' e ' . $hours . ' hora' . ($hours !== 1 ? 's' : '');
+    }
+
+    return $result;
+  }
+  
 }

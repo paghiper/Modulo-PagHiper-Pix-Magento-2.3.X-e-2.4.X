@@ -85,6 +85,17 @@
           <label>Enabled</label>
           <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
         </field>
+        <field id="prazo_validade_pix"
+               translate="label comment"
+               type="text"
+               sortOrder="4"
+               showInDefault="1"
+               showInWebsite="1"
+               showInStore="0">
+          <label>Expiration</label>
+          <comment>Expiration time for the Pix payment in minutes (1 to 576000 minutes.)</comment>
+          <backend_model>Paghiper\Magento2\Model\Config\Backend\PixExpiration</backend_model>
+        </field>
       </group>
       <!-- Fim configurações pix -->
     </section>
