@@ -1,10 +1,10 @@
-# Integration module [PagHiper](https://www.paghiper.com/)
+# Módulo de Integração [PagHiper](https://www.paghiper.com/)
 
-## Installation
+## Instalação
 
-> We recommend that you have a testing environment to validate changes and updates before upgrading your production store. Also, that a backup is made with all the information before executing any update/installation procedure.
+> ⚠️ Recomendamos fortemente o uso de um ambiente de testes para validar alterações e atualizações antes de aplicá-las na sua loja em produção. Além disso, realize sempre um backup completo com todas as informações antes de executar qualquer procedimento de atualização ou instalação.
 
-### Compatible Versions:
+### Versões Compatíveis
 
 - [x] 2.3.X
 - [x] 2.4.0
@@ -16,122 +16,135 @@
 - [x] 2.4.6
 - [x] 2.4.8
 
-### Prerequisite:
+### Requisitos:
 
-- Requires PHP to be at least version 7.0.X.
-- The customer's address must consist of at least 3 lines.
+- PHP na versão mínima 7.0.X.  
+- O endereço do cliente deve conter pelo menos 3 linhas.
 
-### PagHiper Integration Module Installation:
+###  Instalação do Módulo PagHiper
 
-- Download the module and follow the steps below according to how your store was installed:
+- Faça o download do módulo e siga os passos conforme o modo de instalação da sua loja:
 
   #### [Paghiper Module](https://github.com/paghiper/Modulo-PagHiper-Pix-Magento-2.3.X-e-2.4.X)
 
-### Install using Composer
+### Instalação via Composer
 
-1. Install via Packagist
+1. Instale pelo Packagist executando: 
   - ```composer require paghiper/module-magento2```
-    - At this point, you may be asked for your Magento authentication credentials. If you have any questions, there is a description of how to proceed with this. [Adobe Documentation](http://devdocs.magento.com/guides/v2.0/install-gde/prereq/connect-auth.html).
-2. Run the commands:
+    - Se solicitado, informe suas credenciais de autenticação do Magento. [Adobe Documentation](http://devdocs.magento.com/guides/v2.0/install-gde/prereq/connect-auth.html).
+2. Execute os comandos abaixo para concluir a instalação:
   - ```bin/magento setup:upgrade```
   - ```bin/magento setup:di:compile```
   - ```bin/magento setup:static-content:deploy -f```
 
 
-### Install using github
+### Instalação via GitHub (Clone ou Download do Projeto Magento)
 
-If your store was created by cloning or downloading the Magento project, follow these steps:
+Se sua loja foi criada clonando ou baixando o projeto Magento, siga estas etapas:
 
-1. Download the repository as a .zip file.
-2. Within the installation directory of your store, create the folder structure app/code/Paghiper/Magento2.
-3. Extract the contents of the zip file into this folder.
-4. Enable the module with the following command: bin/magento module:enable Paghiper_Magento2 --clear-static-content.
-5. Run the command bin/magento setup:upgrade.
-6. Run the command bin/magento setup:di:compile.
-7. Run the command bin/magento setup:static-content:deploy -f.
-8. Run the command bin/magento cache:clean.
+1. Baixe o repositório como arquivo .zip
+2. Dentro do diretório de instalação da sua loja, crie a pasta com seguinte estrutura: app/code/Paghiper/Magento2
+3. Extraia o conteúdo do arquivo .zip nessa pasta
+4. Execute para habilitar o módulo: bin/magento module:enable Paghiper_Magento2 --clear-static-content.
+5. Execute o comando bin/magento setup:upgrade.
+6. Execute o comando bin/magento setup:di:compile.
+7. Execute o comando bin/magento setup:static-content:deploy -f.
+8. Execute o comando bin/magento cache:clean.
 
-### Configurations
+### Configurações
 
-To configure the address settings in the Magento Admin Panel, follow these steps:
+Configurar Endereço no Painel Administrativo do Magento
+É importante ajustar a quantidade de linhas permitidas no endereço do cliente para que a integração funcione corretamente.
+Para isso seguimos os seguintes passos:
 
-1. In the Magento Admin Panel, click on `Stores` in the sidebar menu.
-2. Then click on `Configuration`.
-3. Next, click on `Customers`, then `Customer Configuration`.
-4. Access the `Name and Address Options`.
-5. In `Number of Lines in Address`, you should enter the number 4.
+1. No painel administrativo do Magento, clique em `Stores`
+2. Agora vamos em `Configuration`.
+3. Proximo passo é clicar em `Customers`, depois `Customer Configuration`.
+4. Acesse a opção `Name and Address Options`.
+5. Em `Number of Lines in Address`, configure para 4
+6. Agora basta salvar as alterações
+   
+Essa configuração ajusta quantas linhas são usadas no formato de endereço, permitindo que você inclua os campos obrigatórios para os endereços de seus clientes
 
-This setting adjusts how many lines are used in the address format, allowing you to accommodate the required fields for your customer addresses:
+![FOTO 1](.github/img/pt_br/01.png)
 
-![FOTO 1](.github/img/01.png)
+Configurar Métodos de Pagamento no Magento
+Após configurar os dados do cliente, siga para a configuração dos métodos de pagamento:
 
-After configuring the Customer settings, follow these steps to access and configure the payment methods in the Magento Admin Panel:
+1. No painel administrativo, vá em `Stores`
+2. Clique em `Configuration`.
+3. No submenu vamos em `Sales`, e clicamos em `Payment Methods`.
 
-1. In the Magento Admin Panel, click on `Stores` in the sidebar menu.
-2. Then click on `Configuration`.
-3. In the submenu under `Sales`, click on `Payment Methods`.
-4. This will load the screen where you can configure the payment methods for your site.
-
-From this screen, you can set up and manage various payment options available to your customers during the checkout process.
+Isso carregará a tela onde você poderá configurar os métodos de pagamento para o seu site.
 
 <p align="center">
-  <img src=".github/img/02.png" />
+  <img src=".github/img/pt_br/02.png" />
 </p>
 
-### How to enable PagHiper in your store
+### Como habilitar o PagHiper na sua loja
 
-In the first information block, there is the configuration to enable or disable the module completely. Check `Yes` to continue with the setup. Next, we have the following fields:
+No primeiro bloco de informações dentro da seção PagHiper, você encontrará a opção para ativar ou desativar o módulo:
 
-- Api Key
-  - API Key provided by PagHiper.
+- ApiKey
+  - Insira sua apiKey fornecida pela PagHiper.
 
 - Token
-  - Token provided by PagHiper.
+  - Token insira seu token gerado na PagHiper
 
-- Validity Days
-  - This option is used for both boleto and Pix. An integer value in `days` is used to specify the validity period of the payment
+- Dias de validade
+  - Esta opção é utilizada tanto para boleto quanto para Pix. Um valor inteiro em `dias` é usado para especificar o período de validade do pagamento.
 
-- Invoice After Confirmed Payment
-  - The invoice is generated only after the payment has been confirmed.
+- Faturar Após Pagamento Confirmado?
+  - Ative para que a nota fiscal seja gerada somente após a confirmação do pagamento.
 
-![FOTO 3](.github/img/03.png)
+![FOTO 3](.github/img/pt_br/03.png)
 
-Just below, there are two options, one for payment configuration with Pix and another with boleto.
+Logo abaixo, você encontrará duas opções: uma para configuração de pagamento com Pix e outra com boleto.
 
-NOTE: For all the following configurations to work, all the previous steps must have been followed.
+NOTA: Para que todas as configurações a seguir funcionem, todas as etapas anteriores devem ter sido seguidas.
 
-### Boleto Settings
+### Configurações do Boleto
 
-- **Enabled**
-  - Enables or disables boleto as a payment method.
+- **Ativado**
 
-- **Late Payment Penalty Percentage**
-  - Adds a percentage value as a penalty for late payment.
+- Ativa ou desativa o boleto como método de pagamento.
 
-- **Interest for Late Payment**
-  - Determines whether interest is applied for late payment, and the amount.
+- **Percentual de Penalidade por Atraso no Pagamento**
 
-- **Number of Discount Days**
-  - The number of days before which a discount is allowed on the informed amount.
+- Adiciona um valor percentual como penalidade por atraso no pagamento.
 
-- **Discount Value for Early Payment**
-  - The discount amount that will be granted to the boleto.
+- **Juros por Atraso no Pagamento**
 
-- **Number of Days After Expiry**
-  - The number of days a customer can still pay the boleto after its due date.
-    ![FOTO 4](.github/img/04.png)
+- Determina se serão aplicados juros por atraso no pagamento e o valor.
 
-### Pix Settings
+- **Número de Dias de Desconto**
 
-- **Enabled**
-  - Enables or disables the Pix payment method.
-    ![FOTO 5](.github/img/05.png)
+- O número de dias antes do qual um desconto é concedido sobre o valor informado.
 
-- **Expiration**
-  - Expiration time for the Pix payment in minutes. If not provided, the value from the `Validity Days` field will be used.
+- **Valor do Desconto por Pagamento Antecipado**
 
-### Note
+- O valor do desconto que será concedido ao boleto.
 
-- It is important to adjust the duration that an order with pending payment remains open beyond the default Magento configuration. The time in minutes set in the image below must be greater than the validity period of an order made by boleto or Pix. For example, 10080 minutes is equivalent to 7 days.
-- Path: `Configuration` -> `Sales` -> `Cron Order Settings` -> `Pending Payment Order Expiration Time (minutes)`
-  ![FOTO 6](.github/img/06.png)
+- **Número de Dias Após o Vencimento**
+
+- O número de dias que o cliente ainda pode pagar o boleto após a data de vencimento.
+  
+    ![FOTO 4](.github/img/pt_br/04.png)
+
+### Configurações do Pix
+
+- **Ativado**
+
+- Ativa ou desativa o método de pagamento Pix.
+    ![FOTO 5](.github/img/pt_br/05.png)
+
+- **Expiração**
+
+- Tempo de expiração do pagamento Pix em minutos. Se não for fornecido, o valor do campo `Dias de Validade` será usado.
+  
+### Observação
+
+- É importante ajustar a duração em que um pedido com pagamento pendente permanece aberto além da configuração padrão do Magento. O tempo em minutos definido na imagem abaixo deve ser maior que o período de validade de um pedido feito por boleto ou Pix. Por exemplo, 10080 minutos equivalem a 7 dias.
+
+- Caminho: `Configuração` -> `Vendas` -> `Configurações de Pedidos Cron` -> `Tempo de Expiração do Pedido com Pagamento Pendente (minutos)`
+  ![FOTO 6](.github/img/pt_br/06.png)
