@@ -2,7 +2,7 @@
   "name": "paghiper/module-magento2",
   "description": "Módulo Oficial do PagHiper para Magento > 2.3.x com emissão de boletos registrados com retorno automático.",
   "type": "magento2-module",
-  "version": "1.1.4",
+  "version": "1.1.6",
   "license": "OSL-3.0",
   "authors": [
     {
