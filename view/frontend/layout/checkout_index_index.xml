@@ -1,9 +1,7 @@
 <?xml version="1.0" ?>
-<page layout="1column"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+<page layout="1column" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
   <head>
-    <script src="Paghiper_Magento2::js/mascara.js"/>
-  </head>
+    </head>
   <body>
     <referenceContainer name="page.messages">
       <block class="Magento\Framework\View\Element\Template" name="ajax.message.placeholder" template="Magento_Theme::html/messages.phtml"/>
@@ -23,8 +21,7 @@
                         <item name="payment" xsi:type="array">
                           <item name="children" xsi:type="array">
                             <item name="renders" xsi:type="array">
-                              <item name="children" xsi:type="array">
-                                <item name="paghiper_boleto" xsi:type="array">
+                              <item name="children" xsi:type="array"> <item name="paghiper_boleto" xsi:type="array">
                                   <item name="component" xsi:type="string">Paghiper_Magento2/js/view/payment/paghiper_boleto</item>
                                   <item name="methods" xsi:type="array">
                                     <item name="paghiper_boleto" xsi:type="array">
@@ -32,6 +29,7 @@
                                     </item>
                                   </item>
                                 </item>
+                                
                                 <item name="paghiper_pix" xsi:type="array">
                                   <item name="component" xsi:type="string">Paghiper_Magento2/js/view/payment/paghiper_pix</item>
                                   <item name="methods" xsi:type="array">
@@ -40,6 +38,7 @@
                                     </item>
                                   </item>
                                 </item>
+      
                               </item>
                             </item>
                           </item>

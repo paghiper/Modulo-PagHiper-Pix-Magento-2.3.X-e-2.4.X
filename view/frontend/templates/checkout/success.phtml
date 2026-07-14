@@ -1,78 +1,138 @@
 <?php
-/** @var $block \Magento\Checkout\Block\Onepage\Success */
+/**
+ * @updated_for_magento_2.4.9_and_php_8.4
+ * @var $block \Paghiper\Magento2\Block\Checkout\Success
+ */
 
 $order = $block->getOrder();
-$qrcodepix       = $order->getPaghiperPix();
-$boleto          = $order->getPaghiperBoleto();
-$linha_digitavel = $order->getPaghiperBoletoDigitavel();
-$chavepix        = $order->getPaghiperChavepix();
-$payment         = $order->getPayment();
-$expirationPix   = $block->getExpirationPix();
+
+if ($order && $order->getId()) {
+    $qrcodepix       = $order->getPaghiperPix();
+    $boleto          = $order->getPaghiperBoleto();
+    $linha_digitavel = $order->getPaghiperBoletoDigitavel();
+    $chavepix        = $order->getPaghiperChavepix();
+    $payment         = $order->getPayment();
+    $expirationPix   = $block->getExpirationPix();
+}
 ?>
 
-<?php if ($payment->getMethod() === 'paghiper_pix') : ?>
-  <div class="actions-toolbar flex just-center column alg-center">
-    <div class="primary">
-      <h2>
-        ⏰ Pague o PIX em <?= $block->escapeHtml($expirationPix); ?>!
-      </h2>
+<style>
+    .paghiper-success-container {
+        margin: 30px 0;
+        padding: 25px;
+        border: 1px solid #e3e3e3;
+        background-color: #fbfbfb;
+        border-radius: 6px;
+        clear: both;
+    }
+    .paghiper-success-container h2 {
+        margin-top: 0;
+        font-weight: 600;
+    }
+    .paghiper-success-container h3 {
+        font-size: 16px;
+        margin-bottom: 12px;
+        font-weight: 600;
+    }
+    .paghiper-vertical-flow {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+        width: 100%;
+        margin-bottom: 15px;
+    }
+    .paghiper-textarea-custom {
+        margin: 0 !important;
+        padding: 10px !important;
+        border: 1px solid #ccc !important;
+        background: #fff !important;
+        border-radius: 4px !important;
+        font-family: monospace !important;
+        font-size: 14px !important;
+        resize: none !important;
+        box-sizing: border-box !important;
+    }
+    .paghiper-center-content {
+        text-align: center;
+    }
+    .paghiper-btn-block {
+        display: inline-block;
+        margin: 0 auto;
+    }
+    /* Estilização para o Iframe do Boleto ficar responsivo e elegante */
+    .paghiper-iframe-wrapper {
+        margin-top: 25px;
+        border-top: 1px dashed #ddd;
+        padding-top: 25px;
+        width: 100%;
+    }
+    .paghiper-boleto-iframe {
+        width: 100%;
+        height: 650px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        background: #fff;
+    }
+</style>
 
-      <img alt="pix-qrcode" src="<?= $block->escapeUrl($qrcodepix); ?>" />
-    </div>
+<?php if (isset($payment) && $payment->getMethod() === 'paghiper_pix') : ?>
+    <div class="paghiper-success-container paghiper-center-content">
+        <h2 style="color: #28a745;">
+            <?= $block->escapeHtml(__('⏰ Pague o PIX em %1!', $expirationPix)); ?>
+        </h2>
+        
+        <?php if ($qrcodepix): ?>
+            <div style="margin: 20px 0;">
+                <img alt="<?= $block->escapeHtmlAttr(__('QR Code Pix')); ?>" 
+                     src="<?= $block->escapeUrl($qrcodepix); ?>" 
+                     style="max-width: 220px; height: auto; display: inline-block; border: 1px solid #ddd; padding: 5px; background: #fff;" />
+            </div>
+        <?php endif; ?>
 
-    <div class="linhes">
-      <h3><?= $block->escapeHtml(__('Digitable line')); ?></h3>
+        <div style="width: 100%; max-width: 550px; margin: 0 auto;">
+            <h3><?= $block->escapeHtml(__('Código Copia e Cola (EMV)')); ?></h3>
 
-      <textarea readonly rows="5" name="pixer" id="select-this">
-        <?= $block->escapeHtml($chavepix); ?>
-      </textarea>
-
-      <div class="actions-toolbar">
-        <div class="primary">
-          <button id="clickMe">
-            <?= $block->escapeHtml(__('Copy')); ?>
-          </button>
+            <div class="paghiper-vertical-flow">
+                <textarea readonly rows="3" id="success-pix-text" class="paghiper-textarea-custom" style="width: 100%;"><?= $block->escapeHtml($chavepix); ?></textarea>
+                <button type="button" 
+                        class="action primary paghiper-btn-block" 
+                        data-mage-init='{"Paghiper_Magento2/js/copytoclipboard": {"target": "#success-pix-text"}}'>
+                    <?= $block->escapeHtml(__('Copiar Código Pix')); ?>
+                </button>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
 <?php endif; ?>
 
-<?php if ($payment->getMethod() === 'paghiper_boleto') : ?>
-  <div class="actions-toolbar flex">
-    <div class="linhes">
-      <h3><?= $block->escapeHtml(__('Digitable line')); ?></h3>
+<?php if (isset($payment) && $payment->getMethod() === 'paghiper_boleto') : ?>
+    <div class="paghiper-success-container">
+        <div style="width: 100%; max-width: 750px; margin: 0 auto;">
+            <h3 class="paghiper-center-content"><?= $block->escapeHtml(__('Linha Digitável do Boleto')); ?></h3>
 
-      <div class="flex">
-        <textarea readonly rows="1" name="pixer" id="select-this">
-          <?= $block->escapeHtml($linha_digitavel); ?>
-        </textarea>
-
-        <div class="actions-toolbar linha-digitavel">
-          <div class="primary">
-            <button id="clickMe">
-              <?= $block->escapeHtml(__('Copy')); ?>
-            </button>
-          </div>
+            <div class="paghiper-vertical-flow">
+                <textarea readonly rows="2" id="success-boleto-text" class="paghiper-textarea-custom" style="width: 100%; text-align: center; font-weight: bold; color: #333;"><?= $block->escapeHtml($linha_digitavel); ?></textarea>
+                <button type="button" 
+                        class="action primary paghiper-btn-block" 
+                        data-mage-init='{"Paghiper_Magento2/js/copytoclipboard": {"target": "#success-boleto-text"}}'>
+                    <?= $block->escapeHtml(__('Copiar Linha Digitável')); ?>
+                </button>
+            </div>
+            
+            <?php if ($boleto): ?>
+                <div class="paghiper-iframe-wrapper">
+                    <p class="paghiper-center-content" style="font-size: 15px; margin-bottom: 15px; font-weight: bold; color: #555;">
+                        <?= $block->escapeHtml(__('Seu boleto bancário já está disponível abaixo para visualização e impressão:')); ?>
+                    </p>
+                    <iframe src="<?= $block->escapeUrl($boleto); ?>" class="paghiper-boleto-iframe" title="Boleto PagHiper"></iframe>
+                    
+                    <div class="paghiper-center-content" style="margin-top: 15px;">
+                        <a href="<?= $block->escapeUrl($boleto); ?>" target="_blank" rel="noopener" style="font-size: 13px; text-decoration: underline;">
+                            <?= $block->escapeHtml(__('Não conseguiu visualizar? Clique aqui para abrir em uma nova janela.')); ?>
+                        </a>
+                    </div>
+                </div>
+            <?php endif; ?>
         </div>
-      </div>
     </div>
-  </div>
-
-  <div class="view-boleto">
-    <iframe
-      src="<?= $block->escapeUrl($boleto); ?>"
-      width="100%"
-      height="500px">
-    </iframe>
-  </div>
-
-  <div class="primary">
-    <a
-      target="_blank"
-      class="action primary continue"
-      href="<?= $block->escapeUrl($boleto); ?>">
-      <span><?= $block->escapeHtml(__('View Billet')); ?></span>
-    </a>
-  </div>
 <?php endif; ?>
