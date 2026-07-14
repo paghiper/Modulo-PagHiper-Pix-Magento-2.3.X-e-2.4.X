@@ -1,49 +1,78 @@
-.modalpix .modal-inner-wrap{
-  width: 33.33%;
-}
-.modalpix .content{
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.flex{
-  display: flex;
-}
-.flex .linhes{
-  width: 50%;
-}
-.view-boleto{
-  margin: 30px 0 0 0;
-}
-.linha-digitavel{
-  margin-left: 15px;
-}
-.just-center{
-  justify-content: center;
-}
-.column{
-  flex-direction: column;
-}
-.alg-center{
-  align-items: center;
+/**
+ * @author Mathias Matas Hennig <mathias@tezus.com.br>
+ * @updated_for_magento_2.4.9
+ */
+
+/* Escopo da Modal do Pix */
+.modalpix .modal-inner-wrap {
+    width: 33.33%;
 }
 
-@media screen and (max-width: 1366px){
-  .modalpix .modal-inner-wrap{
+.modalpix .content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Estrutura Flexível do Módulo (Garante quebra de linha em telas pequenas) */
+.flex {
+    display: flex;
+    flex-wrap: wrap; /* Correção para evitar esmagamento de colunas em mobile */
+}
+
+.flex .linhes {
     width: 50%;
-  }
+    box-sizing: border-box;
 }
-@media screen and (max-width: 1024px){
-  .modalpix .modal-inner-wrap{
-    width: 80%;
-  }
+
+/* Espaçamentos e Alinhamentos da Tela de Sucesso */
+.view-boleto {
+    margin: 30px 0 0 0;
 }
-@media screen and (max-width: 768px){
-  .modalpix .modal-inner-wrap{
-    width: 80%;
-  }
-  .flex .linhes {
-    width: 100%;
-    margin-bottom: 30px;
-  }
+
+.linha-digitavel {
+    margin-left: 15px;
+    word-break: break-all; /* Força a quebra do texto longo da linha digitável em telas menores */
+}
+
+.just-center {
+    justify-content: center;
+}
+
+.column {
+    flex-direction: column;
+}
+
+.alg-center {
+    align-items: center;
+}
+
+/* Media Queries para Responsividade Plena */
+@media screen and (max-width: 1366px) {
+    .modalpix .modal-inner-wrap {
+        width: 50%;
+    }
+}
+
+@media screen and (max-width: 1024px) {
+    .modalpix .modal-inner-wrap {
+        width: 80%;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .modalpix .modal-inner-wrap {
+        width: 90%; /* Ajustado de 80% para 90% para melhor visualização em telas pequenas */
+    }
+    
+    .flex .linhes {
+        width: 100% !important;
+        margin-bottom: 20px;
+    }
+    
+    .linha-digitavel {
+        margin-left: 0;
+        margin-top: 10px;
+        text-align: center;
+    }
 }

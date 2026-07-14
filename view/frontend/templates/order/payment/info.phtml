@@ -1,78 +1,88 @@
 <?php
+/**
+ * @author Mathias Matas Hennig <mathias@tezus.com.br>
+ * @updated_for_magento_2.4.9_and_php_8.4
+ * @var \Paghiper\Magento2\Block\Info $block
+ */
+
 $paymentInfo = $block->getPaymentInfo();
+$methodCode = $block->getPaymentMethod();
+?>
 
-if ($block->getPaymentMethod() === 'paghiper_boleto') : ?>
-
-  <button type="button" class="action primary btn-paghiper-pix" data-trigger="trigger">
-    <span data-bind="i18n: '<?= $block->escapeJs($paymentInfo['texto']); ?>'"></span>
-  </button>
-
-  <div data-bind="mageInit: {
-        'Magento_Ui/js/modal/modal':{
-            'type': 'popup',
-            'modalClass': 'modalpix',
-            'title': 'Boleto',
-            'trigger': '[data-trigger=trigger]',
-            'responsive': true
-        }}">
-    <div class="content">
-      <input
-        class="action primary btn-paghiper-boleto"
-        type="button"
-        id="paghiper"
-        onclick="window.open('<?= $block->escapeHtmlAttr($paymentInfo['url']); ?>');"
-        value="<?= $block->escapeHtmlAttr(__('Baixe seu boleto aqui')); ?>" />
-    </div>
-
-    <h3><?= $block->escapeHtml(__('Digitable line')); ?></h3>
-
-    <textarea readonly rows="1" name="pixer" id="select-this">
-      <?= $block->escapeHtml($paymentInfo['linha-digitavel']); ?>
-    </textarea>
-
-    <div class="actions-toolbar">
-      <div class="primary">
-        <button id="clickMe">
-          <?= $block->escapeHtml(__('Copy')); ?>
+<?php if ($methodCode === 'paghiper_boleto') : ?>
+    <div class="paghiper-payment-info-block view-boleto">
+        <button type="button" class="action primary btn-paghiper-boleto" data-trigger="trigger-boleto">
+            <span><?= $block->escapeHtml(__($paymentInfo['texto'] ?? 'Visualizar Boleto')); ?></span>
         </button>
-      </div>
+
+        <div data-bind="mageInit: {
+            'Magento_Ui/js/modal/modal':{
+                'type': 'popup',
+                'modalClass': 'modalpix',
+                'title': '<?= $block->escapeJs(__('Seu Boleto Bancário')); ?>',
+                'trigger': '[data-trigger=trigger-boleto]',
+                'responsive': true
+            }}">
+            
+            <div class="content" style="margin-bottom: 20px;">
+                <a href="<?= $block->escapeUrl($paymentInfo['url']); ?>" 
+                   target="_blank" 
+                   rel="noopener" 
+                   class="action primary checkout">
+                    <?= $block->escapeHtml(__('Baixe seu boleto aqui')); ?>
+                </a>
+            </div>
+
+            <h3><?= $block->escapeHtml(__('Linha digitável')); ?></h3>
+
+            <textarea readonly rows="2" name="pixer" id="boleto-line-text" class="linha-digitavel" style="width:100%; max-width:100%; font-family:monospace;"><?= $block->escapeHtml($paymentInfo['linha-digitavel']); ?></textarea>
+
+            <div class="actions-toolbar" style="margin-top: 15px;">
+                <div class="primary">
+                    <button type="button" 
+                            class="action primary" 
+                            data-mage-init='{"Paghiper_Magento2/js/copytoclipboard": {"target": "#boleto-line-text"}}'>
+                        <?= $block->escapeHtml(__('Copiar Linha Digitável')); ?>
+                    </button>
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
 
-<?php
-elseif ($block->getPaymentMethod() === 'paghiper_pix') : ?>
-
-  <button type="button" class="action primary btn-paghiper-pix" data-trigger="trigger">
-    <span data-bind="i18n: '<?= $block->escapeJs($paymentInfo['texto']); ?>'"></span>
-  </button>
-
-  <div data-bind="mageInit: {
-        'Magento_Ui/js/modal/modal':{
-            'type': 'popup',
-            'modalClass': 'modalpix',
-            'title': 'Escaneie o QRcode',
-            'trigger': '[data-trigger=trigger]',
-            'responsive': true
-        }}">
-    <div class="content">
-      <img
-        src="<?= $block->escapeHtmlAttr($paymentInfo['url']); ?>"
-        alt="<?= $block->escapeHtmlAttr(__('Erro ao carregar seu QRCode')); ?>">
-    </div>
-
-    <h3><?= $block->escapeHtml(__('Digitable line')); ?></h3>
-
-    <textarea readonly rows="5" name="pixer" id="select-this">
-      <?= $block->escapeHtml($paymentInfo['chavepix']); ?>
-    </textarea>
-
-    <div class="actions-toolbar">
-      <div class="primary">
-        <button id="clickMe">
-          <?= $block->escapeHtml(__('Copy')); ?>
+<?php elseif ($methodCode === 'paghiper_pix') : ?>
+    <div class="paghiper-payment-info-block view-pix">
+        <button type="button" class="action primary btn-paghiper-pix" data-trigger="trigger-pix">
+            <span><?= $block->escapeHtml(__($paymentInfo['texto'] ?? 'Visualizar Código PIX')); ?></span>
         </button>
-      </div>
-    </div>
-  </div>
 
+        <div data-bind="mageInit: {
+            'Magento_Ui/js/modal/modal':{
+                'type': 'popup',
+                'modalClass': 'modalpix',
+                'title': '<?= $block->escapeJs(__('Escaneie o QR Code')); ?>',
+                'trigger': '[data-trigger=trigger-pix]',
+                'responsive': true
+            }}">
+            
+            <div class="content" style="text-align: center; margin-bottom: 20px;">
+                <img src="<?= $block->escapeUrl($paymentInfo['url']); ?>"
+                     alt="<?= $block->escapeHtmlAttr(__('QR Code Pix PagHiper')); ?>"
+                     style="max-width: 250px; height: auto;">
+            </div>
+
+            <h3><?= $block->escapeHtml(__('Código Copia e Cola')); ?></h3>
+
+            <textarea readonly rows="4" name="pixer" id="pix-emv-text" class="linha-digitavel" style="width:100%; max-width:100%; font-family:monospace;"><?= $block->escapeHtml($paymentInfo['chavepix']); ?></textarea>
+
+            <div class="actions-toolbar" style="margin-top: 15px;">
+                <div class="primary">
+                    <button type="button" 
+                            class="action primary" 
+                            data-mage-init='{"Paghiper_Magento2/js/copytoclipboard": {"target": "#pix-emv-text"}}'>
+                        <?= $block->escapeHtml(__('Copiar Código Pix')); ?>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 <?php endif; ?>

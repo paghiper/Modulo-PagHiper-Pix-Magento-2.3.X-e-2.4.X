@@ -1,4 +1,8 @@
 <?php
+/**
+ * @author Mathias Matas Hennig <mathias@tezus.com.br>
+ * @updated_for_magento_2.4.9
+ */
 
 namespace Paghiper\Magento2\Helper;
 
@@ -14,257 +18,256 @@ use Magento\Framework\Serialize\SerializerInterface;
 use Magento\Framework\HTTP\PhpEnvironment\RemoteAddress;
 use Magento\Framework\Encryption\EncryptorInterface;
 
+/**
+ * Class Data Helper
+ * Updated for Magento 2.4.9 & PHP 8.4+
+ */
 class Data extends AbstractHelper
 {
+    /**
+     * @var StoreManagerInterface
+     */
+    protected StoreManagerInterface $storeManager;
 
-  /**
-   * @var StoreManagerInterface
-   */
-  protected StoreManagerInterface $storeManager;
-  /**
-   * @var Session
-   */
-  protected Session $checkoutSession;
-  /**
-   * @var Customer
-   */
-  protected Customer $customerRepo;
-  /**
-   * @var ProductMetadataInterface
-   */
-  protected ProductMetadataInterface $productMetadata;
-  /**
-   * @var ModuleListInterface
-   */
-  protected ModuleListInterface $moduleList;
-  /**
-   * @var Curl
-   */
-  protected Curl $curl;
-  /**
-   * @var SerializerInterface
-   */
-  protected SerializerInterface $serializer;
-  /**
-   * @var RemoteAddress
-   */
-  protected RemoteAddress $remoteAddress;
-  /**
-   * @var EncryptorInterface
-   */
-  protected EncryptorInterface $encryptor;
+    /**
+     * @var Session
+     */
+    protected Session $checkoutSession;
 
-  /**
-   * @param StoreManagerInterface $storeManager
-   * @param Session $checkoutSession
-   * @param Customer $customer
-   * @param Context $context
-   * @param ProductMetadataInterface $productMetadata
-   * @param ModuleListInterface $moduleList
-   * @param Curl $curl
-   * @param SerializerInterface $serializer
-   * @param RemoteAddress $remoteAddress
-   * @param EncryptorInterface $encryptor
-   */
-  public function __construct(
-    StoreManagerInterface    $storeManager,
-    Session                  $checkoutSession,
-    Customer                 $customer,
-    Context                  $context,
-    ProductMetadataInterface $productMetadata,
-    ModuleListInterface      $moduleList,
-    Curl                     $curl,
-    SerializerInterface      $serializer,
-    RemoteAddress            $remoteAddress,
-    EncryptorInterface       $encryptor
-  )
-  {
-    $this->storeManager = $storeManager;
-    $this->checkoutSession = $checkoutSession;
-    $this->customerRepo = $customer;
-    $this->productMetadata = $productMetadata;
-    $this->moduleList = $moduleList;
-    $this->curl = $curl;
-    $this->serializer = $serializer;
-    $this->remoteAddress = $remoteAddress;
-    $this->encryptor = $encryptor;
-    parent::__construct($context);
-  }
+    /**
+     * @var Customer
+     */
+    protected Customer $customerRepo;
 
-  /**
-   * Get config
-   *
-   * @param mixed $path
-   * @return mixed
-   */
-  public function getConfig($path)
-  {
-    $storeScope = \Magento\Store\Model\ScopeInterface::SCOPE_STORE;
-    return $this->scopeConfig->getValue($path, $storeScope);
-  }
+    /**
+     * @var ProductMetadataInterface
+     */
+    protected ProductMetadataInterface $productMetadata;
 
-  /**
-   * Get url
-   *
-   * @return string
-   */
-  public function getUrl()
-  {
-    return "https://api.paghiper.com/transaction/create/";
-  }
+    /**
+     * @var ModuleListInterface
+     */
+    protected ModuleListInterface $moduleList;
 
-  /**
-   * Get acess token
-   *
-   * @return mixed
-   */
-  public function getAcessToken()
-  {
-    return $this->getConfig('payment/paghiper/api_key');
-  }
+    /**
+     * @var Curl
+     */
+    protected Curl $curl;
 
-  /**
-   * Get token
-   *
-   * @return mixed
-   */
-  public function getToken()
-  {
-    return $this->getConfig('payment/paghiper/token');
-  }
+    /**
+     * @var SerializerInterface
+     */
+    protected SerializerInterface $serializer;
 
-  /**
-   * Get days
-   *
-   * @return mixed
-   */
-  public function getDays()
-  {
-    return $this->getConfig('payment/paghiper/validade');
-  }
+    /**
+     * @var RemoteAddress
+     */
+    protected RemoteAddress $remoteAddress;
 
-  /**
-   * Get invoice after confirmation
-   *
-   * @return mixed
-   */
-  public function getInvoiceAfterConfirmation()
-  {
-    return $this->getConfig('payment/paghiper/invoice_auto');
-  }
+    /**
+     * @var EncryptorInterface
+     */
+    protected EncryptorInterface $encryptor;
 
-  /**
-   * Get module enabled
-   *
-   * @return mixed
-   */
-  private function getModuleEnabled()
-  {
-    return $this->getConfig('payment/paghiper/enabled');
-  }
+    /**
+    * @var \Magento\Framework\App\Config\ScopeConfigInterface
+    */
+    protected $_scopeConfig; // O tipo nativo do PHP foi removido para bater com a classe Pai
 
-  /**
-   * Get status billet
-   *
-   * @return bool
-   */
-  public function getStatusBillet()
-  {
-    if ($this->getModuleEnabled() && $this->getConfig('payment/paghiper_boleto/ativar_boleto')) {
-      return true;
-    } else {
-      return false;
+    /**
+     * @param StoreManagerInterface $storeManager
+     * @param Session $checkoutSession
+     * @param Customer $customerRepo
+     * @param ProductMetadataInterface $productMetadata
+     * @param ModuleListInterface $moduleList
+     * @param Curl $curl
+     * @param SerializerInterface $serializer
+     * @param RemoteAddress $remoteAddress
+     * @param EncryptorInterface $encryptor
+     * @param Context $context
+     */
+    public function __construct(
+        StoreManagerInterface $storeManager,
+        Session $checkoutSession,
+        Customer $customerRepo,
+        ProductMetadataInterface $productMetadata,
+        ModuleListInterface $moduleList,
+        Curl $curl,
+        SerializerInterface $serializer,
+        RemoteAddress $remoteAddress,
+        EncryptorInterface $encryptor,
+        Context $context
+    ) {
+        $this->storeManager = $storeManager;
+        $this->checkoutSession = $checkoutSession;
+        $this->customerRepo = $customerRepo;
+        $this->productMetadata = $productMetadata;
+        $this->moduleList = $moduleList;
+        $this->curl = $curl;
+        $this->serializer = $serializer;
+        $this->remoteAddress = $remoteAddress;
+        $this->encryptor = $encryptor;
+        $this->scopeConfig = $context->getScopeConfig();
+        
+        parent::__construct($context);
     }
-  }
 
-  /**
-   * Get status pix
-   *
-   * @return bool
-   */
-  public function getStatusPix()
-  {
-    if ($this->getModuleEnabled() && $this->getConfig('payment/paghiper_pix/ativar_pix')) {
-      return true;
-    } else {
-      return false;
+    /**
+     * Get config value safely
+     *
+     * @param string $path
+     * @return mixed
+     */
+    public function getConfig($path)
+    {
+        return $this->scopeConfig->getValue($path, \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
     }
-  }
 
-  /**
-   * Get Expiration in minutes
-   *
-   * @return int
-   */
-  public function getPixExpirationInMinutes()
-  {
-    $value = $this->getConfig('payment/paghiper_pix/prazo_validade_pix');
-    return !empty($value) ? (int)$value : 0;
-  }
+    /**
+     * Get Access Token
+     *
+     * @return string|null
+     */
+    public function getAcessToken()
+    {
+        return $this->getConfig('payment/paghiper_general/token');
+    }
 
-  /**
-   * Get info juros
-   *
-   * @return array
-   */
-  public function getInfoJuros()
-  {
-    $data['juros'] = $this->getConfig('payment/paghiper_boleto/juros_atraso');
-    $data['multa'] = $this->getConfig('payment/paghiper_boleto/percentual_multa');
-    $data['dias'] = $this->getConfig('payment/paghiper_boleto/numero_apos_vencimento');
-    return $data;
-  }
+    /**
+     * Get API Key
+     *
+     * @return string|null
+     */
+    public function getApiKey()
+    {
+        return $this->getConfig('payment/paghiper_general/api_key');
+    }
 
-  /**
-   * Get info discount
-   *
-   * @return array
-   */
-  public function getInfoDiscount()
-  {
-    $data['dias'] = $this->getConfig('payment/paghiper_boleto/dias_pagamento_antecipado');
-    $data['valor'] = $this->getConfig('payment/paghiper_boleto/valor_desconto_antecipado');
-    return $data;
-  }
+    /**
+     * Get Status Billet
+     *
+     * @return bool
+     */
+    public function getStatusBillet()
+    {
+        return (bool)$this->getConfig('payment/paghiper_boleto/active');
+    }
 
-  /**
-   * Check states
-   *
-   * @param mixed $stateName
-   * @return false|int|string
-   */
-  public function checkStates($stateName)
-  {
-    $brazilianStates = [
-      'AC' => 'Acre',
-      'AL' => 'Alagoas',
-      'AP' => 'Amapá',
-      'AM' => 'Amazonas',
-      'BA' => 'Bahia',
-      'CE' => 'Ceará',
-      'DF' => 'Distrito Federal',
-      'ES' => 'Espírito Santo',
-      'GO' => 'Goiás',
-      'MA' => 'Maranhão',
-      'MT' => 'Mato Grosso',
-      'MS' => 'Mato Grosso do Sul',
-      'MG' => 'Minas Gerais',
-      'PA' => 'Pará',
-      'PB' => 'Paraíba',
-      'PR' => 'Paraná',
-      'PE' => 'Pernambuco',
-      'PI' => 'Piauí',
-      'RJ' => 'Rio de Janeiro',
-      'RN' => 'Rio Grande do Norte',
-      'RS' => 'Rio Grande do Sul',
-      'RO' => 'Rondônia',
-      'RR' => 'Roraima',
-      'SC' => 'Santa Catarina',
-      'SP' => 'São Paulo',
-      'SE' => 'Sergipe',
-      'TO' => 'Tocantins'
-    ];
-    $result = array_search($stateName, $brazilianStates);
-    return $result;
-  }
+    /**
+     * Get Status Pix
+     *
+     * @return bool
+     */
+    public function getStatusPix()
+    {
+        return (bool)$this->getConfig('payment/paghiper_pix/active');
+    }
+
+    /**
+     * Get Pix Expiration In Minutes
+     *
+     * @return int
+     */
+    public function getPixExpirationInMinutes()
+    {
+        return (int)$this->getConfig('payment/paghiper_pix/pix_expiration');
+    }
+
+    /**
+     * Get Invoice After Confirmation Setting
+     *
+     * @return int
+     */
+    public function getInvoiceAfterConfirmation()
+    {
+        return (int)$this->getConfig('payment/paghiper_general/invoice_after_confirmation');
+    }
+
+    /**
+     * Get Days for Billet Expiration
+     *
+     * @return int
+     */
+    public function getDays()
+    {
+        $days = (int)$this->getConfig('payment/paghiper_general/dias_vencimento');
+        return $days > 0 ? $days : 3;
+    }
+
+    /**
+     * Get Info Juros
+     *
+     * @return array
+     */
+    public function getInfoJuros()
+    {
+        $data = [];
+        $data['juros'] = (int)$this->getConfig('payment/paghiper_boleto/juros_atraso');
+        $data['multa'] = (int)$this->getConfig('payment/paghiper_boleto/percentual_multa');
+        $data['dias'] = (int)$this->getConfig('payment/paghiper_boleto/numero_apos_vencimento');
+        return $data;
+    }
+
+    /**
+     * Get info discount
+     *
+     * @return array
+     */
+    public function getInfoDiscount()
+    {
+        $data = [];
+        $data['dias'] = (int)$this->getConfig('payment/paghiper_boleto/dias_pagamento_antecipado');
+        $data['valor'] = $this->getConfig('payment/paghiper_boleto/valor_desconto_antecipado');
+        return $data;
+    }
+
+    /**
+     * Check states and return abbreviation
+     *
+     * @param string|mixed $stateName
+     * @return false|int|string
+     */
+    public function checkStates($stateName)
+    {
+        $stateNameClean = trim((string)$stateName);
+        
+        $brazilianStates = [
+            'AC' => 'Acre', 'AL' => 'Alagoas', 'AP' => 'Amapá', 'AM' => 'Amazonas',
+            'BA' => 'Bahia', 'CE' => 'Ceará', 'DF' => 'Distrito Federal', 'ES' => 'Espírito Santo',
+            'GO' => 'Goiás', 'MA' => 'Maranhão', 'MT' => 'Mato Grosso', 'MS' => 'Mato Grosso do Sul',
+            'MG' => 'Minas Gerais', 'PA' => 'Pará', 'PB' => 'Paraíba', 'PR' => 'Paraná',
+            'PE' => 'Pernambuco', 'PI' => 'Piauí', 'RJ' => 'Rio de Janeiro', 'RN' => 'Rio Grande do Norte',
+            'RS' => 'Rio Grande do Sul', 'RO' => 'Rondônia', 'RR' => 'Roraima', 'SC' => 'Santa Catarina',
+            'SP' => 'São Paulo', 'SE' => 'Sergipe', 'TO' => 'Tocantins'
+        ];
+
+        if (array_key_exists(strtoupper($stateNameClean), $brazilianStates)) {
+            return strtoupper($stateNameClean);
+        }
+
+        $search = array_search(mb_convert_case($stateNameClean, MB_CASE_TITLE, "UTF-8"), $brazilianStates);
+        if ($search !== false) {
+            return $search;
+        }
+
+        return 'SP'; 
+    }
+
+    /**
+     * Safely json decode using Magento Serializer
+     *
+     * @param string|mixed $json
+     * @return array
+     */
+    public function jsonDecode($json)
+    {
+        if (empty($json) || !is_string($json)) {
+            return [];
+        }
+        try {
+            return (array)$this->serializer->unserialize($json);
+        } catch (\Exception $e) {
+            return [];
+        }
+    }
 }

@@ -4,16 +4,16 @@
 "Invoice Number #%1 has been created. PagHiper Transaction Id: %2","Número da Fatura #%1 foi criado. ID da Transação PagHiper: %2"
 "Please fill in your address correctly.","Por favor, preencha seu endereço corretamente."
 "Digitable line","Linha digitável"
-Copy,Copiar
+"Copy","Copiar"
 "View Billet","Visualizar Boleto"
-CPF/CNPJ,CPF/CNPJ
+"CPF/CNPJ","CPF/CNPJ"
 "Place Order","Finalizar Pedido"
-CPF,CPF
+"CPF","CPF"
 "PagHiper - General Settings","PagHiper - Configurações Gerais"
-Enabled,Habilitado
+"Enabled","Habilitado"
 "Enable or disable the module.","Habilitar ou desabilitar o módulo."
 "Api Key","Chave API"
-Token,Token
+"Token","Token"
 "Validity Days","Dias de Validade"
 "Invoice After Confirmed Payment?","Faturar Após Pagamento Confirmado?"
 "PagHiper - Boleto Settings","PagHiper - Configurações de Boleto"
@@ -28,7 +28,7 @@ Token,Token
 "Number of Days After Expiry","Número de Dias Após o Vencimento"
 "Maximum number of days in which the bill can be paid after the due date.","Número máximo de dias em que o boleto pode ser pago após a data de vencimento."
 "PagHiper - Pix Settings","PagHiper - Configurações do Pix"
-"Expiration", "Tempo de Expiração em minutos"
+"Expiration","Tempo de Expiração em minutos"
 "Expiration time for the Pix payment in minutes (1 to 576000 minutes.)","Expiração do PIX em minutos (Insira um valor entre 1 a 576000 minutos)"
 "The value must be an integer.","O valor de expiração do pix precisa ser um numero inteiro."
-"The value must be between 1 and 576000 minutes.","O valor de expiração do pix precisa estar entre 1 e 576000 minutos"
+"The value must be between 1 and 576000 minutes.","O valor de expiração do pix deve ser entre 1 e 576000 minutos."

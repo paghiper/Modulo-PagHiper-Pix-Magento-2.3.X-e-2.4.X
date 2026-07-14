@@ -15,10 +15,11 @@
 - [x] 2.4.5
 - [x] 2.4.6
 - [x] 2.4.8
+- [x] 2.4.9
 
 ### Requisitos:
 
-- PHP na versão mínima 7.0.X.  
+- PHP na versão mínima 7.3.X.  
 - O endereço do cliente deve conter pelo menos 3 linhas.
 
 ###  Instalação do Módulo PagHiper
@@ -77,25 +78,32 @@ Após configurar os dados do cliente, siga para a configuração dos métodos de
 
 Isso carregará a tela onde você poderá configurar os métodos de pagamento para o seu site.
 
-<p align="center">
-  <img src=".github/img/pt_br/02.png" />
-</p>
+![FOTO 2](.github/img/pt_br/02.png)
 
 ### Como habilitar o PagHiper na sua loja
 
 No primeiro bloco de informações dentro da seção PagHiper, você encontrará a opção para ativar ou desativar o módulo:
 
-- ApiKey
+- **Habilitado**
+  - Ativa ou desativa o modulo da PagHiper.
+  
+- **Chave API**
   - Insira sua apiKey fornecida pela PagHiper.
 
-- Token
+- **Token**
   - Token insira seu token gerado na PagHiper
 
-- Dias de validade
+- **Dias de validade**
   - Esta opção é utilizada tanto para boleto quanto para Pix. Um valor inteiro em `dias` é usado para especificar o período de validade do pagamento.
 
-- Faturar Após Pagamento Confirmado?
+- **Faturar Após Pagamento Confirmado?**
   - Ative para que a nota fiscal seja gerada somente após a confirmação do pagamento.
+
+- **Ignorar Cancelamento Automático do Magento**
+  - Ative para que as rotinas automaticas de cancelamento de pedidos, não afete os pedidos emitidos atráves da PagHiper
+
+- **Habilitar Log de Depuração**
+  - Ao ser ativado começa a salvar em arquivo local os logs das comunicações da PagHiper para seu ambiente
 
 ![FOTO 3](.github/img/pt_br/03.png)
 
@@ -105,46 +113,38 @@ NOTA: Para que todas as configurações a seguir funcionem, todas as etapas ante
 
 ### Configurações do Boleto
 
-- **Ativado**
+- **Habilitado**
+  - Ativa ou desativa o boleto como método de pagamento.
 
-- Ativa ou desativa o boleto como método de pagamento.
+- **Titulo do Meio de Pagamento**
+  - Nome do meio de pagamento que aparece ao cliente.
 
-- **Percentual de Penalidade por Atraso no Pagamento**
+- **Percentual de Multa**
+  - Adiciona um valor percentual da multa (0,1,2).
 
-- Adiciona um valor percentual como penalidade por atraso no pagamento.
+- **Juros por Atraso**
+  - Determina se serão aplicados juros por atraso no pagamento e o valor.
 
-- **Juros por Atraso no Pagamento**
-
-- Determina se serão aplicados juros por atraso no pagamento e o valor.
-
-- **Número de Dias de Desconto**
-
-- O número de dias antes do qual um desconto é concedido sobre o valor informado.
+- **Número de Dias do Desconto**
+  - O número de dias antes do qual um desconto é concedido sobre o valor informado.
 
 - **Valor do Desconto por Pagamento Antecipado**
-
-- O valor do desconto que será concedido ao boleto.
+  - O valor do desconto que será concedido ao boleto.
 
 - **Número de Dias Após o Vencimento**
-
-- O número de dias que o cliente ainda pode pagar o boleto após a data de vencimento.
+  - O número de dias que o cliente ainda pode pagar o boleto após a data de vencimento.
   
-    ![FOTO 4](.github/img/pt_br/04.png)
+![FOTO 4](.github/img/pt_br/04.png)
 
 ### Configurações do Pix
 
-- **Ativado**
+- **Habilitado**
+  - Ativa ou desativa o método de pagamento Pix.
 
-- Ativa ou desativa o método de pagamento Pix.
-    ![FOTO 5](.github/img/pt_br/05.png)
+- **Titulo do Meio de Pagamento**
+  - Nome do meio de pagamento que aparece ao cliente.
 
-- **Expiração**
+- **Tempo de Expiração em minutos**
+  - Tempo de expiração do pagamento Pix em minutos. Se não for fornecido, o valor do campo `Dias de Validade` será usado.
 
-- Tempo de expiração do pagamento Pix em minutos. Se não for fornecido, o valor do campo `Dias de Validade` será usado.
-  
-### Observação
-
-- É importante ajustar a duração em que um pedido com pagamento pendente permanece aberto além da configuração padrão do Magento. O tempo em minutos definido na imagem abaixo deve ser maior que o período de validade de um pedido feito por boleto ou Pix. Por exemplo, 10080 minutos equivalem a 7 dias.
-
-- Caminho: `Configuração` -> `Vendas` -> `Configurações de Pedidos Cron` -> `Tempo de Expiração do Pedido com Pagamento Pendente (minutos)`
-  ![FOTO 6](.github/img/pt_br/06.png)
+![FOTO 5](.github/img/pt_br/05.png)

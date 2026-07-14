@@ -1,4 +1,7 @@
 <?php
+/**
+ * @updated_for_magento_2.4.9_and_php_8.4
+ */
 
 namespace Paghiper\Magento2\Block\Adminhtml\Sales\Order\Invoice;
 
@@ -10,12 +13,12 @@ class Totals extends Template
 {
     /**
      * Order invoice
-     * @var Invoice
+     * @var Invoice|null
      */
     protected $_invoice;
 
     /**
-     * @var DataObject
+     * @var DataObject|null
      */
     protected $_source;
 
@@ -32,37 +35,44 @@ class Totals extends Template
     /**
      * Get invoice
      *
-     * @return mixed
+     * @return Invoice|null
      */
-    public function getInvoice()
+    public function getInvoice(): ?Invoice
     {
-        return $this->getParentBlock()->getInvoice();
+        $parentBlock = $this->getParentBlock();
+        return $parentBlock ? $parentBlock->getInvoice() : null;
     }
 
     /**
      * Initialize payment fee totals
      *
-     * @return $this
+     * @return self
      */
-    public function initTotals(): Totals
+    public function initTotals(): self
     {
-        $this->getParentBlock();
-        $this->getInvoice();
-        $this->getSource();
+        $source = $this->getSource();
+        if (!$source) {
+            return $this;
+        }
 
-        if (!$this->getSource()->getDataByKey('paghiper_fee_amount')) {
+        $feeAmount = $source->getDataByKey('paghiper_fee_amount');
+        if (!$feeAmount) {
             return $this;
         }
 
         $total = new DataObject(
             [
-                'code' => 'paghiper_fee',
-                'value' => $this->getSource()->getDataByKey('paghiper_fee_amount'),
+                'code'  => 'paghiper_fee',
+                'value' => $feeAmount,
                 'label' => __('Interest/Paghiper Fine')
             ]
         );
 
-        $this->getParentBlock()->addTotal($total, 'paghiper_fee');
+        $parentBlock = $this->getParentBlock();
+        if ($parentBlock) {
+            $parentBlock->addTotal($total, 'paghiper_fee');
+        }
+
         return $this;
     }
 }

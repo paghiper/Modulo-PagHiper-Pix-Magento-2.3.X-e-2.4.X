@@ -1,11 +1,6 @@
 <?xml version="1.0"?>
-<!--
-/**
- * @author Mathias Matas Hennig <mathias@tezus.com.br>
- */
--->
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
-  <preference for="Magento\Sales\Model\Order\Payment\Operations\OrderOperation" 
-    type="Paghiper\Magento2\Model\Order\Payment\Operations\OrderOperation"/>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+  <type name="Magento\Sales\Model\Order">
+    <plugin name="paghiper_bypass_cron_cancel" type="Paghiper\Magento2\Plugin\OrderCanCancelPlugin" sortOrder="10"/>
+  </type>
 </config>

@@ -1,34 +1,75 @@
 <?php
+/**
+ * @updated_for_magento_2.4.9_and_php_8.4
+ */
 
 namespace Paghiper\Magento2\Block\Adminhtml\Order\View;
 
-class Custom extends \Magento\Backend\Block\Template
+use Magento\Backend\Block\Template;
+use Magento\Backend\Block\Template\Context;
+use Magento\Sales\Model\OrderFactory;
+use Magento\Sales\Model\Order;
+
+class Custom extends Template
 {
     /**
-     * @param \Magento\Backend\Block\Template\Context $context
-     * @param \Magento\Sales\Model\Order $order
+     * @var OrderFactory
+     */
+    protected $orderFactory;
+
+    /**
+     * Cache local para a instância do pedido atual
+     * @var Order|null
+     */
+    protected $orderInstance = null;
+
+    /**
+     * @param Context $context
+     * @param OrderFactory $orderFactory
      * @param array $data
      */
     public function __construct(
-        \Magento\Backend\Block\Template\Context $context,
-        \Magento\Sales\Model\Order $order,
+        Context $context,
+        OrderFactory $orderFactory,
         array $data = []
     ) {
-        $this->order = $order;
         parent::__construct($context, $data);
+        $this->orderFactory = $orderFactory;
+    }
+
+    /**
+     * Recupera a ordem com cache em memória interna para evitar múltiplas queries
+     *
+     * @return Order|null
+     */
+    protected function getOrder(): ?Order
+    {
+        if ($this->orderInstance === null) {
+            $orderId = $this->getRequest()->getParam('order_id');
+            if ($orderId) {
+                $order = $this->orderFactory->create()->load($orderId);
+                if ($order->getId()) {
+                    $this->orderInstance = $order;
+                }
+            }
+        }
+        return $this->orderInstance;
     }
 
     /**
      * Get payment method
      *
-     * @return string
+     * @return string|null
      */
-    public function getPaymentMethod()
+    public function getPaymentMethod(): ?string
     {
-        $order_id = $this->getRequest()->getParam('order_id');
-        $order = $this->order->load($order_id);
+        $order = $this->getOrder();
+        if (!$order) {
+            return null;
+        }
+        
         $payment = $order->getPayment();
-        return $payment->getMethod();
+        return $payment ? $payment->getMethod() : null;
     }
 
     /**
@@ -38,23 +79,27 @@ class Custom extends \Magento\Backend\Block\Template
      */
     public function getPaymentInfo()
     {
-        $order_id = $this->getRequest()->getParam('order_id');
-        $order = $this->order->load($order_id);
-        if ($payment = $order->getPayment()) {
+        $order = $this->getOrder();
+        if (!$order) {
+            return false;
+        }
+
+        $payment = $order->getPayment();
+        if ($payment) {
             $paymentMethod = $payment->getMethod();
             switch ($paymentMethod) {
                 case 'paghiper_boleto':
                     return [
-                'tipo' => 'Boleto',
-                'url' => $order->getPaghiperBoleto(),
-                'texto' => 'Clique aqui para imprimir seu boleto.'
-                ];
+                        'tipo'  => 'Boleto',
+                        'url'   => $order->getPaghiperBoleto(),
+                        'texto' => 'Clique aqui para imprimir seu boleto.'
+                    ];
                 case 'paghiper_pix':
                     return [
-                'tipo' => 'Pix',
-                'url' => $order->getPaghiperPix(),
-                'texto' => 'Clique aqui para ver seu QRCode.'
-                ];
+                        'tipo'  => 'Pix',
+                        'url'   => $order->getPaghiperPix(),
+                        'texto' => 'Clique aqui para ver seu QRCode.'
+                    ];
             }
         }
         return false;
